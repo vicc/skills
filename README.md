@@ -2,17 +2,18 @@
 
 **Bring the idea. Let your agent cook.**
 
-Skills are reusable instructions that help an AI coding assistant tackle specific tasks. This collection starts with turning visual effects from the web into code for iPhone, iPad, and Mac apps.
+Skills are reusable instructions that help an AI coding assistant tackle specific tasks. This collection helps you bring visual effects into Apple apps and work through GitHub pull request reviews.
 
 ## What’s inside?
 
 | Skill | What it helps you do |
 | --- | --- |
 | [GLSL to Metal](shaders/glsl-to-metal/) | Bring animated backgrounds, ripples, and other shader effects into an Apple app. |
+| [GitHub Codex PR Loop](workflows/github-codex-pr-loop/) | Work through PR reviews, fixes, and checks with your agent. |
 
 *A shader is a small program that creates or changes what you see on screen.*
 
-## Get started
+## Get started with shaders
 
 ### 1. Add the skill
 
@@ -53,7 +54,7 @@ You can keep directing it in everyday language:
 
 You don’t need to know shader syntax to describe what you want.
 
-## Before you start
+## Before you start with shaders
 
 - **Codex with access to your project files** for installation and implementation.
 - **A Mac with Xcode** to build and run the Apple app.
@@ -75,6 +76,12 @@ Three examples include source code, actual GPU captures, and instructions for re
 | Still untested | iOS execution and execution on the minimum OS releases |
 
 [Full testing details →](shaders/glsl-to-metal/examples/README.md#supported-targets-and-actual-testing)
+
+## Let your PR get a second look
+
+[GitHub Codex PR Loop](workflows/github-codex-pr-loop/) helps your agent open a pull request, collect two separate reviews, fix actionable findings, and repeat the checks. It brings back the PR and validation results when the current changes are ready.
+
+The workflow needs GitHub Codex review access, the GitHub CLI, and Codex recurring automations. See its [setup guide](workflows/github-codex-pr-loop/README.md#get-it-set-up) before starting a loop.
 
 ## Contributing and license
 
