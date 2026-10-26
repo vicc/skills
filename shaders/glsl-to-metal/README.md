@@ -1,49 +1,113 @@
 # GLSL to Metal
 
-An agent skill for converting GLSL fragment shaders and Shadertoy effects into Metal for **iOS and macOS**.
+**Bring your shader inspo to an Apple app.**
 
-The skill prefers SwiftUI stitchable shaders when suitable. It uses a small Metal renderer when an effect needs feedback, additional texture inputs, explicit passes, or other capabilities outside SwiftUI's shader interface.
+Animated gradients, dreamy backgrounds, ripples, and other visual effects. This skill helps your AI coding assistant translate them into code for **iPhone, iPad, and Mac**.
 
-## What to provide
+GLSL is a language used to write shaders. Metal is Apple’s graphics technology. The goal is to preserve the look and motion while making the effect work in your app.
 
-- The GLSL source and any helper functions.
-- Every used texture, channel assignment, sampler setting, and buffer pass.
-- The target platform and deployment version, or an existing project to inspect.
-- Any behavior or parameters that must remain unchanged.
+## Get it set up
 
-For a reconstruction, provide an accessible demo or visual reference and describe its motion. The agent should distinguish a reconstruction from a literal source translation.
-
-## Use
-
-Install using the [repository instructions](../../README.md), then ask:
+In Codex, paste:
 
 ```text
-Use $glsl-to-metal to convert this Shadertoy effect for my native
-macOS SwiftUI app. Keep window resizing and display scaling correct,
-preserve its inputs, and show a minimal view that renders it.
+Install the glsl-to-metal skill from:
+https://github.com/vicc/skills/tree/main/shaders/glsl-to-metal
 ```
 
-Expect a `.metal` file, Swift integration, a minimal view, and notes on differences and tunable parameters.
+Once installation is confirmed, you can use it in your next message. Already installed it from the main README? You’re good.
 
-## Scope and requirements
+You’ll need **a Mac with Xcode** to build and run the Apple app. No particular documentation plugin or third-party Swift package is required.
 
-SwiftUI's core shader APIs start at **iOS 17 and macOS 14**. The skill follows the app's deployment target and checks newer APIs separately. Older targets may need another rendering path. Other Apple platforms require their own availability checks.
+## Bring a reference
 
-No specific MCP server or third-party Swift package is required. Apple Doc MCP and Context7 are optional documentation tools; official web documentation or the installed SDK can serve as alternatives. Compiling generated code requires a compatible Xcode installation and Apple SDK.
+Give your agent:
 
-These are agent instructions, not a shader compiler or rendering library. Every generated port still needs appropriate build, visual, and performance validation. A successful Swift build alone does not establish runtime shader bindings or visual fidelity.
+- **The effect:** shader code or a link to the demo.
+- **The destination:** iPhone, iPad, Mac, or an existing app project.
+- **Your art direction:** what you love about it and what you want to change.
 
-## Examples and tested versions
+If the effect uses images or textures, include those too. Source code gives the closest translation. A screenshot or video can guide a reconstruction, with any approximations explained.
 
-The [example gallery](examples/README.md) includes a procedural fill, a ripple distortion, and a two-texture renderer, each with side-by-side GLSL/Metal captures, source code, and reproduction commands.
+## Try this prompt
 
-All app-facing example Swift and Metal compiled for **arm64 iOS 17 and macOS 14**. Actual captures ran on **macOS 26.7.1 with an Apple M3 Max**, using Xcode 27.1. No iOS runtime, Intel Mac, or execution on the minimum OS releases was tested. The [full testing table](examples/README.md#supported-targets-and-actual-testing) distinguishes deployment targets, compilation, and runtime evidence.
+```text
+Use $glsl-to-metal to bring this effect into my SwiftUI app.
 
-## Files
+I’m designing for iPhone and Mac. Keep the colors and motion
+close to the reference, and make the colors and speed adjustable.
+
+Explain the setup in plain language, show me where each file
+goes, and give me a small example I can preview in Xcode.
+
+Tell me what you tested and anything that still needs checking.
+
+Here’s the effect:
+[paste shader code or a link]
+```
+
+If you already have an app, open its project in Codex so the agent can work with your existing setup.
+
+## Then art-direct it
+
+Keep the feedback visual:
+
+- “Make it feel calmer: slower movement, softer transitions.”
+- “Use this palette and keep the background dark.”
+- “Dial it back so the headline stays readable.”
+- “Make the effect respond to touch.”
+- “Show me which values I can tweak myself.”
+
+Specific references help. “Match the movement in this clip” gives your agent more to work with than “make it cooler.”
+
+## What you get
+
+- **The effect code:** a `.metal` file.
+- **The app connection:** Swift code that puts it on screen.
+- **A small example view:** somewhere to preview and adjust it.
+- **Clear notes:** what changed, what’s adjustable, and what was tested.
+
+Your agent handles the implementation details. You still get to decide whether the result feels right.
+
+## See the receipts
+
+[Browse the GLSL ↔ Metal comparisons →](examples/README.md)
+
+The gallery includes **aurora ribbons, ripple distortion, and a two-texture blend**, with real GPU captures, both versions of the code, and reproduction instructions.
+
+## Supported and tested versions
+
+| Platform | What’s verified |
+| --- | --- |
+| **iOS 17+ target** | Examples compiled for iOS 17. Not run on an iPhone, iPad, or simulator. |
+| **macOS 14+ target** | Examples compiled for macOS 14. Captures actually ran on macOS 26.7.1, Apple M3 Max. |
+
+The tested build setup used **Xcode 27.1**. Execution on the minimum OS releases, Intel Macs, and Mac Catalyst remains untested.
+
+The comparisons measure shader output under controlled conditions. They don’t establish how every finished app will look or perform.
+
+[Full testing details →](examples/README.md#supported-targets-and-actual-testing)
+
+## Contributing and license
+
+Found something confusing? Improvements are welcome. See [Contributing](../../CONTRIBUTING.md).
+
+[MIT licensed](../../LICENSE). Third-party shaders and assets keep their own terms.
+
+<details>
+<summary>Under the hood</summary>
+
+The skill prefers SwiftUI stitchable shaders when suitable. It uses a small Metal renderer when an effect needs feedback, additional texture inputs, explicit passes, or other capabilities outside SwiftUI’s shader interface.
+
+SwiftUI’s core shader APIs start at iOS 17 and macOS 14. The skill follows the app’s deployment target and checks newer APIs separately. Older targets may need another rendering path. Other Apple platforms require their own availability checks.
+
+Apple Doc MCP and Context7 are optional documentation tools. Official web documentation or the installed SDK can serve as alternatives. Compiling generated code requires a compatible Xcode installation and Apple SDK.
 
 - [SKILL.md](SKILL.md): conversion workflow and requirements.
 - [references/swiftui.md](references/swiftui.md): shader signatures, resource limits, library loading, and optional refinements.
 - [agents/openai.yaml](agents/openai.yaml): Codex display metadata and invocation prompt.
 - [examples/](examples/README.md): original shader pairs, Swift integration, and actual GPU comparisons.
 
-See [contribution guidance](../../CONTRIBUTING.md) and the [MIT license](../../LICENSE). Third-party source code and assets retain their own terms.
+These are agent instructions, not a shader compiler or rendering library. Every generated port still needs appropriate build, visual, and performance validation. A successful Swift build alone does not establish runtime shader bindings or visual fidelity.
+
+</details>
