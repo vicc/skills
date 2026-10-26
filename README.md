@@ -2,33 +2,37 @@
 
 **Bring the idea. Let your agent cook.**
 
-Skills are reusable instructions that help an AI coding assistant tackle specific tasks. This collection helps you bring visual effects into Apple apps and work through GitHub pull request reviews.
+Skills are reusable instructions that help an AI coding assistant tackle specific tasks. This collection helps you bring visual effects into Apple apps and work through code reviews with Codex.
 
-## What’s inside?
+You describe what you want. The skill gives your agent a workflow to follow.
+
+## Pick your starting point
 
 | Skill | What it helps you do |
 | --- | --- |
-| [GLSL to Metal](shaders/glsl-to-metal/) | Bring animated backgrounds, ripples, and other shader effects into an Apple app. |
-| [Code Review Loop](workflows/code-review-loop/) | Work through PR reviews, fixes, and checks with your agent. |
+| [GLSL to Metal](https://github.com/vicc/skills/tree/main/shaders/glsl-to-metal) | Bring animated backgrounds, ripples, and other shader effects into iPhone and Mac apps. |
+| [Code Review Loop](https://github.com/vicc/skills/tree/main/workflows/code-review-loop) | Get code reviewed, work through fixes, and check the results before merging. |
 
-*A shader is a small program that creates or changes what you see on screen.*
+Install either skill, or both. Once Codex confirms installation, open your project and try its starter prompt below.
 
-## Get started with shaders
+## GLSL to Metal
 
-### 1. Add the skill
+**Found an effect you love? Bring it into your app.**
 
-Open Codex and paste this:
+A shader is a small program that creates or changes what you see on screen. This skill translates GLSL shader code into Metal for Apple apps, helping preserve the original look and motion.
+
+Think flowing gradients, soft ripples, and animated backgrounds.
+
+### Add it
+
+Open Codex and paste:
 
 ```text
 Install the glsl-to-metal skill from:
 https://github.com/vicc/skills/tree/main/shaders/glsl-to-metal
 ```
 
-Codex can handle the installation. Once it confirms, use the skill in your next message.
-
-### 2. Bring an effect you like
-
-Paste your shader code or a link to an effect, then try:
+### Try it
 
 ```text
 Use $glsl-to-metal to bring this effect into my iPhone app.
@@ -41,69 +45,86 @@ Here’s the effect:
 [paste your shader code or link]
 ```
 
-Building for Mac? Say that instead. Already have a project? Open it in Codex so the agent can follow its setup.
+Building for Mac? Say that instead. Keep directing it with requests like “make the movement softer” or “use these brand colors.”
 
-### 3. Make it yours
+### What you’ll need
 
-You can keep directing it in everyday language:
+- **Codex with access to your project files.**
+- **A Mac with Xcode** to build and preview the app.
+- **Shader source or a reference effect.** Source code gives the closest translation. A screenshot alone may require an approximation.
 
-- “Make the movement slower and softer.”
-- “Use these three brand colors.”
-- “Keep the effect subtle behind my text.”
-- “Explain how I can preview this in Xcode.”
+The examples target iOS 17+ and macOS 14+. They’ve been compiled for both and rendered on macOS 26.7.1. iOS execution and execution on the minimum OS versions remain untested.
 
-You don’t need to know shader syntax to describe what you want.
+[Setup and usage guide →](https://github.com/vicc/skills/tree/main/shaders/glsl-to-metal)
 
-## Before you start with shaders
+[Side-by-side comparisons and testing details →](https://github.com/vicc/skills/tree/main/shaders/glsl-to-metal/examples)
 
-- **Codex with access to your project files** for installation and implementation.
-- **A Mac with Xcode** to build and run the Apple app.
-- **Shader source or a reference effect.** Source code gives the closest translation. A screenshot or demo alone may require an approximation.
+## Code Review Loop
 
-The skill produces code and guidance. Your app still needs to be built and checked.
+**Let your agent check your changes, fix issues, and take another look.**
 
-## See the receipts
+A pull request, or PR, proposes code changes before they’re merged into a project. This skill combines GitHub’s Codex review with a separate broader review, works through actionable findings, and repeats the checks on the updated code.
 
-[Browse the side-by-side GLSL and Metal comparisons →](shaders/glsl-to-metal/examples/README.md)
+You decide when to merge.
 
-Three examples include source code, actual GPU captures, and instructions for reproducing the results.
+### Add it
 
-| Support and testing | Status |
-| --- | --- |
-| Example deployment targets | iOS 17+ and macOS 14+ |
-| Successfully compiled for | iOS 17 and macOS 14 |
-| Actually rendered on | macOS 26.7.1, Apple M3 Max |
-| Still untested | iOS execution and execution on the minimum OS releases |
+Open Codex and paste:
 
-[Full testing details →](shaders/glsl-to-metal/examples/README.md#supported-targets-and-actual-testing)
+```text
+Install the code-review-loop skill from:
+https://github.com/vicc/skills/tree/main/workflows/code-review-loop
+```
 
-## Let your PR get a second look
+### Try it
 
-[Code Review Loop](workflows/code-review-loop/) helps your agent open a pull request, collect two separate reviews, fix actionable findings, and repeat the checks. It brings back the PR and validation results when the current changes are ready.
+```text
+Use $code-review-loop to open a pull request for these
+changes against main.
 
-The workflow needs GitHub Codex review access, the GitHub CLI, and Codex recurring automations. See its [setup guide](workflows/code-review-loop/README.md#get-it-set-up) before starting a loop.
+Run the GitHub Codex review and a separate broader review.
+Fix actionable findings and run the relevant checks.
+Repeat until both reviews are clean for the latest changes.
+
+Explain any blockers in plain language.
+Leave the final merge to me.
+```
+
+Here, `main` is the branch your changes should land on. Replace it if your project uses another branch.
+
+### What you’ll need
+
+- **A local Git project connected to GitHub**, with permission to push changes and manage PRs.
+- **The GitHub CLI (`gh`) installed and signed in.**
+- **GitHub Codex review and Codex recurring automations available.**
+- **Your project’s build and test tools.**
+
+The loop can commit and push changes, comment on PRs, and schedule follow-ups. Use it when you’re ready for those actions.
+
+It’s a good fit for prototypes and small design changes you can run and verify. For production work, use Code Review in Codex to inspect the changes yourself or with a developer. Know what you’re shipping before merging.
+
+[Setup and usage guide →](https://github.com/vicc/skills/tree/main/workflows/code-review-loop)
+
+[How the loop decides it’s done →](https://github.com/vicc/skills/tree/main/workflows/code-review-loop#what-counts-as-done)
 
 ## Contributing and license
 
-Found something confusing or have an improvement? See [Contributing](CONTRIBUTING.md).
+Found something confusing or have an improvement? See [Contributing](https://github.com/vicc/skills/blob/main/CONTRIBUTING.md).
 
-[MIT licensed](LICENSE). Third-party shaders and assets keep their own licenses.
+[MIT licensed](https://github.com/vicc/skills/blob/main/LICENSE). Third-party shaders and assets keep their own licenses.
 
 <details>
 <summary>Manual installation</summary>
 
-Clone or download this repository, then run the following from its root to install the shader skill in Codex:
+Clone or download this repository. Copy the entire folder for each skill you want into `${CODEX_HOME:-$HOME/.codex}/skills/`, keeping its folder name.
 
-```sh
-skill_dir="${CODEX_HOME:-$HOME/.codex}/skills/glsl-to-metal"
-if [ -e "$skill_dir" ]; then
-  echo "Skill already exists at $skill_dir; review it before replacing."
-else
-  mkdir -p "$(dirname "$skill_dir")"
-  cp -R shaders/glsl-to-metal "$skill_dir"
-fi
-```
+| Skill | Folder to copy |
+| --- | --- |
+| GLSL to Metal | `shaders/glsl-to-metal` |
+| Code Review Loop | `workflows/code-review-loop` |
 
-Other agents that support `SKILL.md` can use the same skill through their own installation mechanism. `agents/openai.yaml` contains Codex-specific display metadata; the instructions and references are ordinary Markdown.
+If a skill is already installed, review your existing copy before replacing it.
+
+Other agents that support `SKILL.md` can use these instructions through their own installation mechanism. Check each skill’s requirements first. Code Review Loop depends on Codex review and recurring automation capabilities.
 
 </details>
