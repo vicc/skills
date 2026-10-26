@@ -1,0 +1,4 @@
+interface:
+  display_name: "GLSL to Metal"
+  short_description: "Convert GLSL shaders to Metal for iOS and macOS"
+  default_prompt: "Use $glsl-to-metal to convert this GLSL or Shadertoy shader into Metal and SwiftUI code for my app's Apple platform and deployment target."
