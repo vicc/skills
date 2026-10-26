@@ -38,6 +38,14 @@ preserve the animation and colors, and expose speed as a parameter.
 
 See the [skill README](shaders/glsl-to-metal/README.md) for inputs, requirements, and limitations.
 
+## Shader examples
+
+[Browse three GLSL/Metal comparisons](shaders/glsl-to-metal/examples/README.md), with source code, runnable Swift integration, raw captures, measured pixel differences, and reproduction scripts.
+
+![GLSL and Metal aurora comparison](shaders/glsl-to-metal/examples/aurora-ribbons/comparison.png)
+
+The examples target **iOS 17+ and macOS 14+**. Both minimum targets were compiled; actual GPU captures ran on **macOS 26.7.1, Apple M3 Max**. See the [support and testing table](shaders/glsl-to-metal/examples/README.md#supported-targets-and-actual-testing) for toolchain details and untested platforms.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Keep changes focused, source technical claims, and distinguish checks performed from checks still needed.

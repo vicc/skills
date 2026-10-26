@@ -33,10 +33,17 @@ No specific MCP server or third-party Swift package is required. Apple Doc MCP a
 
 These are agent instructions, not a shader compiler or rendering library. Every generated port still needs appropriate build, visual, and performance validation. A successful Swift build alone does not establish runtime shader bindings or visual fidelity.
 
+## Examples and tested versions
+
+The [example gallery](examples/README.md) includes a procedural fill, a ripple distortion, and a two-texture renderer, each with side-by-side GLSL/Metal captures, source code, and reproduction commands.
+
+All app-facing example Swift and Metal compiled for **arm64 iOS 17 and macOS 14**. Actual captures ran on **macOS 26.7.1 with an Apple M3 Max**, using Xcode 27.1. No iOS runtime, Intel Mac, or execution on the minimum OS releases was tested. The [full testing table](examples/README.md#supported-targets-and-actual-testing) distinguishes deployment targets, compilation, and runtime evidence.
+
 ## Files
 
 - [SKILL.md](SKILL.md): conversion workflow and requirements.
 - [references/swiftui.md](references/swiftui.md): shader signatures, resource limits, library loading, and optional refinements.
 - [agents/openai.yaml](agents/openai.yaml): Codex display metadata and invocation prompt.
+- [examples/](examples/README.md): original shader pairs, Swift integration, and actual GPU comparisons.
 
 See [contribution guidance](../../CONTRIBUTING.md) and the [MIT license](../../LICENSE). Third-party source code and assets retain their own terms.

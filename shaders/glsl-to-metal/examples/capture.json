@@ -1,0 +1,123 @@
+{
+  "capturedAtUTC": "2026-10-26T18:56:50.786376+00:00",
+  "method": "Native GLSL/OpenGL and offscreen Metal GPU renders; not SwiftUI window screenshots",
+  "size": [
+    640,
+    400
+  ],
+  "timeSeconds": 1.25,
+  "userSpaceUnitsPerPixel": 1,
+  "format": "RGBA8 UNORM; no blending, MSAA, dithering, or sRGB texture decoding",
+  "textureSampling": "Normalized coordinates, linear filtering, clamp-to-edge, no mipmaps, top row v=0",
+  "os": "26.7.1",
+  "osBuild": "25G241",
+  "architecture": "arm64",
+  "gpu": "Apple M3 Max",
+  "openGL": "4.1 Metal - 90.5",
+  "glslDriver": "4.10",
+  "sourceLanguages": {
+    "GLSL": "330 core",
+    "Metal": "3.1"
+  },
+  "xcode": [
+    "Xcode 27.1",
+    "Build version 27A9275"
+  ],
+  "swift": [
+    "swift-driver version: 1.168.6 Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)"
+  ],
+  "metalCompiler": [
+    "Apple metal version 32023.921 (metalfe-32023.921.6)"
+  ],
+  "sdkVersions": {
+    "macosx": "27.0",
+    "iphoneos": "27.1"
+  },
+  "examples": {
+    "aurora-ribbons": {
+      "metrics": {
+        "channelRange": "0...255",
+        "comparisonSpace": "Raw encoded RGB/RGBA8 PNG samples; no color-profile conversion",
+        "differingAlphaPixelsPercentage": 0,
+        "differingPixelDefinition": "At least one RGBA channel differs by one or more integer levels",
+        "differingPixelsPercentage": 1.271484375,
+        "differingRGBPixelsPercentage": 1.271484375,
+        "height": 400,
+        "maxAlphaError": 0,
+        "maxRGBError": 1,
+        "meanAbsoluteAlphaError": 0,
+        "meanAbsoluteRGBError": 0.00428125,
+        "rootMeanSquareRGBError": 0.065431261641512,
+        "width": 640
+      },
+      "sha256": {
+        "effect.glsl": "0b5e03d67a8e5b30b5462bde8fcc7fdbc755103ff51cb98e37ce41d83615b28a",
+        "effect.metal": "26cb418523ebaadd8228970bedf522b84c2fa426f6552790b114a5e2531718f3",
+        "glsl.png": "0398bc849be2d550d7b7fcb507f5aceace3a8a32be91e7d38a15718046889948",
+        "metal.png": "3e02e7b4211ed545de39e36b813d4d750c3baf3ccfadd8c726f8c9590c93697a",
+        "comparison.png": "d161f7048f3965fbbfdc61874c9958996739eb87470315ce405a3d3dc1764f35"
+      }
+    },
+    "ripple-distortion": {
+      "metrics": {
+        "channelRange": "0...255",
+        "comparisonSpace": "Raw encoded RGB/RGBA8 PNG samples; no color-profile conversion",
+        "differingAlphaPixelsPercentage": 0,
+        "differingPixelDefinition": "At least one RGBA channel differs by one or more integer levels",
+        "differingPixelsPercentage": 0.00078125,
+        "differingRGBPixelsPercentage": 0.00078125,
+        "height": 400,
+        "maxAlphaError": 0,
+        "maxRGBError": 1,
+        "meanAbsoluteAlphaError": 0,
+        "meanAbsoluteRGBError": 2.6041666666666666e-06,
+        "rootMeanSquareRGBError": 0.001613743060919757,
+        "width": 640
+      },
+      "sha256": {
+        "effect.glsl": "775238e8fff412c6c6488707d07f0bb380758222602ef93788de2eff61603451",
+        "effect.metal": "36e7d3b273e29e01e76f5796dd23599d49db844b37d6c43452b52929477f0cf9",
+        "glsl.png": "4de82a99a5b7a981ae7acf2dcfc4eab7a697269e5b1d474b0de3b314a770f031",
+        "metal.png": "e080a59133d86d817f939f318a9bafc625da8bed59461b10ae3b4a1d64f59afb",
+        "comparison.png": "02bf520de9d9b67a5a4b4a725753f4f9d578aec413fc53956447c7e12c052fdd"
+      }
+    },
+    "two-texture-blend": {
+      "metrics": {
+        "channelRange": "0...255",
+        "comparisonSpace": "Raw encoded RGB/RGBA8 PNG samples; no color-profile conversion",
+        "differingAlphaPixelsPercentage": 0,
+        "differingPixelDefinition": "At least one RGBA channel differs by one or more integer levels",
+        "differingPixelsPercentage": 0.01171875,
+        "differingRGBPixelsPercentage": 0.01171875,
+        "height": 400,
+        "maxAlphaError": 0,
+        "maxRGBError": 1,
+        "meanAbsoluteAlphaError": 0,
+        "meanAbsoluteRGBError": 4.036458333333333e-05,
+        "rootMeanSquareRGBError": 0.006353312784157044,
+        "width": 640
+      },
+      "sha256": {
+        "effect.glsl": "79d54114f1b11e48cbcc7040496bd17f06d6b5728d33a912a39f75573d66682e",
+        "effect.metal": "3dec2a2f0125631e22047f6e268563add468134d5a742e9fc3551e3692d3eee6",
+        "glsl.png": "dfcd003f846f9e66e1f98befe220321af5435e9d43d11f71c6a79e9c6f4ead7a",
+        "metal.png": "b882f06c3a1b39e0740198d0c5a1f62c1ff585d57dd95ec05d6a7dd7597455c9",
+        "comparison.png": "cb895ae46959e93ff53bab536b6e6c4ed92a68b142990fbcce415552a6a98404"
+      }
+    }
+  },
+  "sharedSourceSHA256": {
+    "assets/grid.png": "1d819b25fa43244899a7250c9958ffd50173ed512d86a7d0690c496d722679e8",
+    "assets/stripes.png": "db7d7673ba5c6c3c5bacb32f3c075c72447e3155c791548ef1b29572e7458803",
+    "tools/check-bindings.swift": "4527d2166f6073d5b5ce874adbb54aebfb6066f250fae7437eea967a9b61b522",
+    "tools/compare.swift": "1866e053fb590cd6147a199b0e2b8e28e391a2124c39084fc86fc41d4f11d263",
+    "tools/make-inputs.py": "a128e574f204c4b7ad4a4bb0921619013ddd4b2b87efac955b8a0b196df190da",
+    "tools/metal/ComparisonHarness.h": "923e3a62cbb7336368e34b3a578165a1e0ce0f80b9c4a75ae1be05c2bd110328",
+    "tools/record-capture.py": "3a5afd59e927da92757f3cd1fe6d9c6edbbbcbf59df1280fdaa2e974862ff8a9",
+    "tools/render-glsl.mm": "5484f891b907e6c45043b300941427fbda24059a2a3c1da5de6a9d70c18d61f2",
+    "tools/render-metal.swift": "c9ae237645880f3a9b646cfce9bf8748cdc32ef1a3c46a1979885c235cdbe7f4",
+    "tools/render.sh": "3b2e8bed668534bfb9ef1b4a6b5a240debdbc9a425565abf595fd275128f04e7",
+    "tools/validate.sh": "f50f43f5b914b605d505fcf8f02a023a247e77ce9788737629fc59e7f7c822f8"
+  }
+}

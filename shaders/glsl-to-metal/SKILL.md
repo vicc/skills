@@ -81,6 +81,10 @@ Check input coverage, coordinate units, aspect ratio, time, sampling bounds, alp
 
 When source rendering is available, compare at matching inputs/time, different aspect ratios, and transparency where applicable. Validate any macOS claim on macOS and any iOS claim on iOS. Distinguish compilation, shader loading/binding, visual comparison, and device performance; claim only checks actually performed.
 
+## Reference examples
+
+When a concrete implementation would help, consult the [example gallery](examples/README.md): a procedural SwiftUI fill, inverse ripple distortion, and two-texture Metal renderer. Read only the relevant example. Its controlled captures and version table describe actual validation; do not generalize those results to other inputs, GPUs, OS releases, or end-to-end SwiftUI appearance.
+
 ## Language references
 
 - [Metal Shading Language specification](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf)
