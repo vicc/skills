@@ -14,7 +14,7 @@ After [installing the skill](../../README.md#get-it-set-up), paste this into Cod
 
 ```text
 Use $glsl-to-metal to add the two-texture blend example to my app:
-https://github.com/vicc/skills/tree/main/shaders/glsl-to-metal/examples/two-texture-blend
+https://github.com/vicc/skills/tree/main/shader-skills/glsl-to-metal/examples/two-texture-blend
 
 Start with the two included images. Explain how to replace
 them with my own artwork, then help me animate the blend.

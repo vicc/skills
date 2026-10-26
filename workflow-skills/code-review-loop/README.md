@@ -24,7 +24,7 @@ In Codex, paste:
 
 ```text
 Install the code-review-loop skill from:
-https://github.com/vicc/skills/tree/main/workflows/code-review-loop
+https://github.com/vicc/skills/tree/main/workflow-skills/code-review-loop
 ```
 
 Once installation is confirmed, open the project you want to work on and use the skill in your next message.

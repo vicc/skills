@@ -14,7 +14,7 @@ After [installing the skill](../../README.md#get-it-set-up), paste this into Cod
 
 ```text
 Use $glsl-to-metal to add the ripple distortion example to my app:
-https://github.com/vicc/skills/tree/main/shaders/glsl-to-metal/examples/ripple-distortion
+https://github.com/vicc/skills/tree/main/shader-skills/glsl-to-metal/examples/ripple-distortion
 
 Start with the included grid image so I can check the effect.
 Then help me replace it with my own artwork.

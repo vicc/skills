@@ -14,7 +14,7 @@ After [installing the skill](../../README.md#get-it-set-up), paste this into Cod
 
 ```text
 Use $glsl-to-metal to add the aurora ribbons example to my app:
-https://github.com/vicc/skills/tree/main/shaders/glsl-to-metal/examples/aurora-ribbons
+https://github.com/vicc/skills/tree/main/shader-skills/glsl-to-metal/examples/aurora-ribbons
 
 Start with the included animated version. Help me adjust
 the colors and speed, and explain where each file goes.
