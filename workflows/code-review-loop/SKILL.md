@@ -1,9 +1,9 @@
 ---
-name: github-codex-pr-loop
+name: code-review-loop
 description: Push local work as a GitHub PR against a user-specified base branch and run a recurring review/fix loop combining @codex review with a separate broader review of smaller bugs, edge cases, and meaningful missing tests. Validate and push fixes, then repeat until both reviews are clean for the latest pushed code. Use when the user asks to ship changes through a Codex-reviewed PR loop or keep fixing and re-reviewing a PR until it is ready to merge.
 ---
 
-# GitHub Codex PR Loop
+# Code Review Loop
 
 ## Overview
 
@@ -66,7 +66,7 @@ Run a separate code review of the full PR diff and relevant surrounding code, ca
 7. Create the recurring automation.
    - Use the Codex automation tool, not raw automation files.
    - Create a heartbeat automation attached to the current thread with `rrule` `FREQ=MINUTELY;INTERVAL=2`.
-   - Name it `Codex PR review loop: <owner>/<repo>#<pr-number>` or a similarly unique name.
+   - Name it `Code Review Loop: <owner>/<repo>#<pr-number>` or a similarly unique name.
    - The prompt must be self-contained: include repo, checkout path, PR number, PR URL, base/head branches and SHAs, latest GitHub review-request comment timestamp/id, and the broader review record or an accessible reference to it. Update that state when the comparison, review request, findings, or validation status changes.
    - Tell future turns to use this skill, complete both reviews, and fix actionable findings from either. Use `github:gh-address-comments` for GitHub feedback when available; otherwise inspect thread-aware feedback and address it with the available GitHub tools or `gh`.
    - Stay quiet on unchanged, non-actionable wakeups; notify on meaningful progress, completion, or a blocker requiring attention.
@@ -105,7 +105,7 @@ Run a separate code review of the full PR diff and relevant surrounding code, ca
 Use this shape when creating the heartbeat prompt, filling in concrete values:
 
 ```text
-Use $github-codex-pr-loop to continue the Codex review loop for <repo>#<pr-number>: <pr-url>.
+Use $code-review-loop to continue the Codex review loop for <repo>#<pr-number>: <pr-url>.
 
 Base branch: <base-branch>
 Head branch: <head-branch>

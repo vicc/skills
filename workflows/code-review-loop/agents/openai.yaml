@@ -1,0 +1,4 @@
+interface:
+  display_name: "Code Review Loop"
+  short_description: "Loop GitHub and broader reviews with fixes and tests"
+  default_prompt: "Use $code-review-loop to push this work as a PR against main and keep fixing and re-reviewing GitHub feedback, smaller bugs, edge cases, and meaningful missing tests until both reviews are clean."

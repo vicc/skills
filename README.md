@@ -9,7 +9,7 @@ Skills are reusable instructions that help an AI coding assistant tackle specifi
 | Skill | What it helps you do |
 | --- | --- |
 | [GLSL to Metal](shaders/glsl-to-metal/) | Bring animated backgrounds, ripples, and other shader effects into an Apple app. |
-| [GitHub Codex PR Loop](workflows/github-codex-pr-loop/) | Work through PR reviews, fixes, and checks with your agent. |
+| [Code Review Loop](workflows/code-review-loop/) | Work through PR reviews, fixes, and checks with your agent. |
 
 *A shader is a small program that creates or changes what you see on screen.*
 
@@ -79,9 +79,9 @@ Three examples include source code, actual GPU captures, and instructions for re
 
 ## Let your PR get a second look
 
-[GitHub Codex PR Loop](workflows/github-codex-pr-loop/) helps your agent open a pull request, collect two separate reviews, fix actionable findings, and repeat the checks. It brings back the PR and validation results when the current changes are ready.
+[Code Review Loop](workflows/code-review-loop/) helps your agent open a pull request, collect two separate reviews, fix actionable findings, and repeat the checks. It brings back the PR and validation results when the current changes are ready.
 
-The workflow needs GitHub Codex review access, the GitHub CLI, and Codex recurring automations. See its [setup guide](workflows/github-codex-pr-loop/README.md#get-it-set-up) before starting a loop.
+The workflow needs GitHub Codex review access, the GitHub CLI, and Codex recurring automations. See its [setup guide](workflows/code-review-loop/README.md#get-it-set-up) before starting a loop.
 
 ## Contributing and license
 

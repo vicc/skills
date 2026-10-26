@@ -1,6 +1,6 @@
-# GitHub Codex PR Loop
+# Code Review Loop
 
-**Let your agent handle the review rounds.**
+**Let your agent check your changes, fix issues, and take another look.**
 
 A pull request, or PR, proposes code changes before they’re merged into a project. This skill helps Codex open the PR, collect feedback, fix actionable issues, and repeat the checks until the current changes are ready for you to review and merge.
 
@@ -23,8 +23,8 @@ Keep the loop as a helper for finding issues and working through fixes. Before m
 In Codex, paste:
 
 ```text
-Install the github-codex-pr-loop skill from:
-https://github.com/vicc/skills/tree/main/workflows/github-codex-pr-loop
+Install the code-review-loop skill from:
+https://github.com/vicc/skills/tree/main/workflows/code-review-loop
 ```
 
 Once installation is confirmed, open the project you want to work on and use the skill in your next message.
@@ -32,7 +32,7 @@ Once installation is confirmed, open the project you want to work on and use the
 ## Put your changes through the loop
 
 ```text
-Use $github-codex-pr-loop to open a pull request for these
+Use $code-review-loop to open a pull request for these
 changes against main.
 
 Run the GitHub Codex review and a separate broader review.
