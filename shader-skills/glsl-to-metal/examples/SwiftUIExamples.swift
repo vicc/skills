@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Add both stitchable example .metal files to the app target without
+/// Add the stitchable example .metal files to the app target without
 /// COMPARISON_CAPTURE. Time is explicit so previews and captures are repeatable.
 @available(iOS 17.0, macOS 14.0, *)
 struct AuroraRibbonsExample: View {
@@ -71,5 +71,26 @@ private struct AuroraClock {
         stored = elapsed()
         started = .now
         running = value
+    }
+}
+
+/// A repeating pattern that crosses negative and positive coordinates.
+@available(iOS 17.0, macOS 14.0, *)
+struct NegativeModuloExample: View {
+    var time: Float = 1.25
+
+    var body: some View {
+        Rectangle().fill(ShaderLibrary.negativeModulo(.boundingRect, .float(time)))
+    }
+}
+
+/// A sine-based hash whose exact pattern can depend on compiler math settings.
+/// See noise-hash/README.md before substituting the optional integer control.
+@available(iOS 17.0, macOS 14.0, *)
+struct NoiseHashExample: View {
+    var time: Float = 1.25
+
+    var body: some View {
+        Rectangle().fill(ShaderLibrary.noiseHash(.boundingRect, .float(time)))
     }
 }

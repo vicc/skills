@@ -73,7 +73,11 @@ Your agent handles the implementation details. You still get to decide whether t
 
 [Browse the GLSL ↔ Metal comparisons →](examples/README.md)
 
-The gallery includes **aurora ribbons, ripple distortion, and a two-texture blend**, with real GPU captures, both versions of the code, and reproduction instructions.
+The gallery includes **aurora ribbons, ripple distortion, and a two-texture blend**, plus experiments for **negative modulo and noise hashes**. Each includes real GPU captures, both versions of the code, and reproduction instructions.
+
+The math experiments show why a pattern can lose its repeat or change colors during conversion. You can compare the correct modulo conversion, an intentional mistake, two Metal math settings, and a clearly labeled alternative noise pattern.
+
+[Why tiny math differences can change the look →](references/numerical-precision.md)
 
 ## Supported and tested versions
 
@@ -105,6 +109,7 @@ Apple Doc MCP and Context7 are optional documentation tools. Official web docume
 
 - [SKILL.md](SKILL.md): conversion workflow and requirements.
 - [references/swiftui.md](references/swiftui.md): shader signatures, resource limits, library loading, and optional refinements.
+- [references/numerical-precision.md](references/numerical-precision.md): fast math, sensitive noise, modulo, and recording actual compiler settings.
 - [agents/openai.yaml](agents/openai.yaml): Codex display metadata and invocation prompt.
 - [examples/](examples/README.md): original shader pairs, Swift integration, and actual GPU comparisons.
 

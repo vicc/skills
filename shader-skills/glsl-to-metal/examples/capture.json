@@ -1,5 +1,5 @@
 {
-  "capturedAtUTC": "2026-10-26T18:56:50.786376+00:00",
+  "capturedAtUTC": "2026-10-27T16:44:33.300025+00:00",
   "method": "Native GLSL/OpenGL and offscreen Metal GPU renders; not SwiftUI window screenshots",
   "size": [
     640,
@@ -50,12 +50,33 @@
         "rootMeanSquareRGBError": 0.065431261641512,
         "width": 640
       },
+      "metalCompilerFlags": [
+        "-std=metal3.1",
+        "-mmacosx-version-min=14.0",
+        "-DCOMPARISON_CAPTURE=1",
+        "-fmetal-math-mode=fast",
+        "-fmetal-math-fp32-functions=fast"
+      ],
+      "capture": {
+        "api": "Metal",
+        "capture": "offscreen-render-pipeline",
+        "device": "Apple M3 Max",
+        "displayScale": 1,
+        "height": 400,
+        "origin": "top-left",
+        "os": "Version 26.7.1 (Build 25G241)",
+        "pixelFormat": "RGBA8Unorm",
+        "textureCount": 0,
+        "time": 1.25,
+        "width": 640
+      },
       "sha256": {
+        "comparison.png": "d161f7048f3965fbbfdc61874c9958996739eb87470315ce405a3d3dc1764f35",
         "effect.glsl": "0b5e03d67a8e5b30b5462bde8fcc7fdbc755103ff51cb98e37ce41d83615b28a",
         "effect.metal": "26cb418523ebaadd8228970bedf522b84c2fa426f6552790b114a5e2531718f3",
         "glsl.png": "0398bc849be2d550d7b7fcb507f5aceace3a8a32be91e7d38a15718046889948",
         "metal.png": "3e02e7b4211ed545de39e36b813d4d750c3baf3ccfadd8c726f8c9590c93697a",
-        "comparison.png": "d161f7048f3965fbbfdc61874c9958996739eb87470315ce405a3d3dc1764f35"
+        "metrics.json": "9a5897a2699bb83872bc45f5def8f8e5f330add22224c8a8852d74e3ae27091d"
       }
     },
     "ripple-distortion": {
@@ -74,12 +95,33 @@
         "rootMeanSquareRGBError": 0.001613743060919757,
         "width": 640
       },
+      "metalCompilerFlags": [
+        "-std=metal3.1",
+        "-mmacosx-version-min=14.0",
+        "-DCOMPARISON_CAPTURE=1",
+        "-fmetal-math-mode=fast",
+        "-fmetal-math-fp32-functions=fast"
+      ],
+      "capture": {
+        "api": "Metal",
+        "capture": "offscreen-render-pipeline",
+        "device": "Apple M3 Max",
+        "displayScale": 1,
+        "height": 400,
+        "origin": "top-left",
+        "os": "Version 26.7.1 (Build 25G241)",
+        "pixelFormat": "RGBA8Unorm",
+        "textureCount": 1,
+        "time": 1.25,
+        "width": 640
+      },
       "sha256": {
+        "comparison.png": "02bf520de9d9b67a5a4b4a725753f4f9d578aec413fc53956447c7e12c052fdd",
         "effect.glsl": "775238e8fff412c6c6488707d07f0bb380758222602ef93788de2eff61603451",
         "effect.metal": "36e7d3b273e29e01e76f5796dd23599d49db844b37d6c43452b52929477f0cf9",
         "glsl.png": "4de82a99a5b7a981ae7acf2dcfc4eab7a697269e5b1d474b0de3b314a770f031",
         "metal.png": "e080a59133d86d817f939f318a9bafc625da8bed59461b10ae3b4a1d64f59afb",
-        "comparison.png": "02bf520de9d9b67a5a4b4a725753f4f9d578aec413fc53956447c7e12c052fdd"
+        "metrics.json": "a5b9eae9ef99a4c26e4794b52e914954811a73c82f14c1f59deb3af919ea4bcc"
       }
     },
     "two-texture-blend": {
@@ -98,26 +140,561 @@
         "rootMeanSquareRGBError": 0.006353312784157044,
         "width": 640
       },
+      "metalCompilerFlags": [
+        "-std=metal3.1",
+        "-mmacosx-version-min=14.0",
+        "-DCOMPARISON_CAPTURE=1",
+        "-fmetal-math-mode=fast",
+        "-fmetal-math-fp32-functions=fast"
+      ],
+      "capture": {
+        "api": "Metal",
+        "capture": "offscreen-render-pipeline",
+        "device": "Apple M3 Max",
+        "displayScale": 1,
+        "height": 400,
+        "origin": "top-left",
+        "os": "Version 26.7.1 (Build 25G241)",
+        "pixelFormat": "RGBA8Unorm",
+        "textureCount": 2,
+        "time": 1.25,
+        "width": 640
+      },
       "sha256": {
+        "comparison.png": "cb895ae46959e93ff53bab536b6e6c4ed92a68b142990fbcce415552a6a98404",
         "effect.glsl": "79d54114f1b11e48cbcc7040496bd17f06d6b5728d33a912a39f75573d66682e",
         "effect.metal": "3dec2a2f0125631e22047f6e268563add468134d5a742e9fc3551e3692d3eee6",
         "glsl.png": "dfcd003f846f9e66e1f98befe220321af5435e9d43d11f71c6a79e9c6f4ead7a",
         "metal.png": "b882f06c3a1b39e0740198d0c5a1f62c1ff585d57dd95ec05d6a7dd7597455c9",
-        "comparison.png": "cb895ae46959e93ff53bab536b6e6c4ed92a68b142990fbcce415552a6a98404"
+        "metrics.json": "9f919d03b37b70259c408b8c96d777497a3cb9990766e6a22383cdad19eae41b"
+      }
+    },
+    "negative-modulo": {
+      "metrics": {
+        "channelRange": "0...255",
+        "comparisonSpace": "Raw encoded RGB/RGBA8 PNG samples; no color-profile conversion",
+        "differingAlphaPixelsPercentage": 0,
+        "differingPixelDefinition": "At least one RGBA channel differs by one or more integer levels",
+        "differingPixelsPercentage": 70.6328125,
+        "differingRGBPixelsPercentage": 70.6328125,
+        "height": 400,
+        "maxAlphaError": 0,
+        "maxRGBError": 1,
+        "meanAbsoluteAlphaError": 0,
+        "meanAbsoluteRGBError": 0.23546875,
+        "rootMeanSquareRGBError": 0.4852512235945418,
+        "width": 640
+      },
+      "metalCompilerFlags": [
+        "-std=metal3.1",
+        "-mmacosx-version-min=14.0",
+        "-DCOMPARISON_CAPTURE=1",
+        "-fmetal-math-mode=safe",
+        "-fmetal-math-fp32-functions=precise"
+      ],
+      "capture": {
+        "api": "Metal",
+        "capture": "offscreen-render-pipeline",
+        "device": "Apple M3 Max",
+        "displayScale": 1,
+        "height": 400,
+        "origin": "top-left",
+        "os": "Version 26.7.1 (Build 25G241)",
+        "pixelFormat": "RGBA8Unorm",
+        "textureCount": 0,
+        "time": 1.25,
+        "width": 640
+      },
+      "sha256": {
+        "comparison.png": "abdb45fac54eea4c4323ab3241d6a2fd39b65284912e3dd090ead1de45edeb12",
+        "effect.glsl": "cba4a026e72716e2bdeccc1a7deb969893e11eeea96b22bc87196b0aace4ed35",
+        "effect.metal": "6b1994eb6d8dbd0422c8b055de14659bc14af0276568be422652f17b7a2399be",
+        "fmod-comparison.png": "afa3b52a12bf634255beeb7daa663a8a9045147c23ca575cd43f6591c31d6955",
+        "fmod-metrics.json": "a725c84a9a2637d2593cbd343268becd4a1d8fbbd0cf8c4990e3118117847683",
+        "glsl.png": "9124607a1c0015f3669a0690a654c6763f7c2f492c68b13a18c7787de98853aa",
+        "metal-fmod.png": "2b31e2dbaa4deec6e9cd63e0d992fcdc5e35ced4c4e2fdfcb60e76e509121b61",
+        "metal.png": "1372c40cfb28e56cc45297eee834ebe588f28700ad25610ee143e352ac30e55c",
+        "metrics.json": "71b139473b37ed8dad6d870a6f49987fb9f5017ddf32e4cdb11e924a703f6786"
+      },
+      "variants": {
+        "fmod": {
+          "leftImage": "glsl.png",
+          "rightImage": "metal-fmod.png",
+          "comparisonImage": "fmod-comparison.png",
+          "purpose": "Intentionally incorrect fmod translation",
+          "glslDefines": [],
+          "metalCompilerFlags": [
+            "-std=metal3.1",
+            "-mmacosx-version-min=14.0",
+            "-DCOMPARISON_CAPTURE=1",
+            "-fmetal-math-mode=safe",
+            "-fmetal-math-fp32-functions=precise",
+            "-DMODULO_USE_FMOD=1"
+          ],
+          "metrics": {
+            "channelRange": "0...255",
+            "comparisonSpace": "Raw encoded RGB/RGBA8 PNG samples; no color-profile conversion",
+            "differingAlphaPixelsPercentage": 0,
+            "differingPixelDefinition": "At least one RGBA channel differs by one or more integer levels",
+            "differingPixelsPercentage": 85.16015625,
+            "differingRGBPixelsPercentage": 85.16015625,
+            "height": 400,
+            "maxAlphaError": 0,
+            "maxRGBError": 243,
+            "meanAbsoluteAlphaError": 0,
+            "meanAbsoluteRGBError": 23.595052083333332,
+            "rootMeanSquareRGBError": 62.36393866934774,
+            "width": 640
+          }
+        }
+      }
+    },
+    "noise-hash": {
+      "metrics": {
+        "channelRange": "0...255",
+        "comparisonSpace": "Raw encoded RGB/RGBA8 PNG samples; no color-profile conversion",
+        "differingAlphaPixelsPercentage": 0,
+        "differingPixelDefinition": "At least one RGBA channel differs by one or more integer levels",
+        "differingPixelsPercentage": 0,
+        "differingRGBPixelsPercentage": 0,
+        "height": 400,
+        "maxAlphaError": 0,
+        "maxRGBError": 0,
+        "meanAbsoluteAlphaError": 0,
+        "meanAbsoluteRGBError": 0,
+        "rootMeanSquareRGBError": 0,
+        "width": 640
+      },
+      "metalCompilerFlags": [
+        "-std=metal3.1",
+        "-mmacosx-version-min=14.0",
+        "-DCOMPARISON_CAPTURE=1",
+        "-fmetal-math-mode=fast",
+        "-fmetal-math-fp32-functions=fast"
+      ],
+      "capture": {
+        "api": "Metal",
+        "capture": "offscreen-render-pipeline",
+        "device": "Apple M3 Max",
+        "displayScale": 1,
+        "height": 400,
+        "origin": "top-left",
+        "os": "Version 26.7.1 (Build 25G241)",
+        "pixelFormat": "RGBA8Unorm",
+        "textureCount": 0,
+        "time": 1.25,
+        "width": 640
+      },
+      "sha256": {
+        "comparison.png": "b4c4434aca771b436231854531708102cca8c63634ce843be1b347eeccb0331e",
+        "effect.glsl": "e4413801549df0e73a4fb07c05e440f8ada579951d9aa1261ad1e4abcedd0ed7",
+        "effect.metal": "eaf15c1219c1bd5075d766678bd42df656d4bda612d00028e9948dbc1c8ae5c2",
+        "glsl-integer.png": "89b5ef3215d97bf6161bc1ab3cc28bf04901d0610c514d200d243b537f951c08",
+        "glsl.png": "31a36345cd5230f978cdd4e183602fb3abbabb77a402ee2ed936f519779a3ae2",
+        "integer-comparison.png": "55d01eab36f505228c93b50f4698b9598b910f8c4d2501b4841f9cc1cd8574ce",
+        "integer-metrics.json": "10b130f41db83017ff603c2d00be46350f44684194a37b4a20bf0443bdb21e0e",
+        "large-seed-fast-comparison.png": "0684775b06153c56c93cb2e26a9c368afa866858759561b7bffe67a9025da473",
+        "large-seed-fast-metrics.json": "c354d1f51f72064cf4633df2f2c792aa03eed8b33ebb99d73cfadd02c7dcde05",
+        "large-seed-glsl.png": "8cd4116d5772183e25f91ce99ed85480cd7edb65acd15a230dbabbe8e7d35290",
+        "large-seed-integer-comparison.png": "e26a4b8b75ac433848081f06fb8dd53818394388a2522786e589ddaeea969215",
+        "large-seed-integer-glsl.png": "982d2cc7cdb945aca36ed21f5fed4bb2e6da332b2cadc46bb63e0adab5d53d3d",
+        "large-seed-integer-metrics.json": "c354d1f51f72064cf4633df2f2c792aa03eed8b33ebb99d73cfadd02c7dcde05",
+        "large-seed-precise-comparison.png": "2270cb23ca1a4e2503eed84c9fcefa6bb74330305a04d6851967e7937ae2d88a",
+        "large-seed-precise-metrics.json": "3059fd85e24f0644cc3c1dc28453b21a7aa5168111b81b68246255e4f0dcb0ac",
+        "metal-integer.png": "89b5ef3215d97bf6161bc1ab3cc28bf04901d0610c514d200d243b537f951c08",
+        "metal-large-seed-fast.png": "8cd4116d5772183e25f91ce99ed85480cd7edb65acd15a230dbabbe8e7d35290",
+        "metal-large-seed-integer.png": "982d2cc7cdb945aca36ed21f5fed4bb2e6da332b2cadc46bb63e0adab5d53d3d",
+        "metal-large-seed-precise.png": "3b59a299944c05b589370d77b9e04fc71691a2d127145a08ba244922b9f7b012",
+        "metal-precise.png": "31a36345cd5230f978cdd4e183602fb3abbabb77a402ee2ed936f519779a3ae2",
+        "metal.png": "31a36345cd5230f978cdd4e183602fb3abbabb77a402ee2ed936f519779a3ae2",
+        "metrics.json": "10b130f41db83017ff603c2d00be46350f44684194a37b4a20bf0443bdb21e0e",
+        "precise-comparison.png": "bfa0f551ec45a4194c5abf0608bc776bdd7fd07cff2a472b8983b348e167d6ee",
+        "precise-metrics.json": "10b130f41db83017ff603c2d00be46350f44684194a37b4a20bf0443bdb21e0e"
+      },
+      "variants": {
+        "precise": {
+          "leftImage": "glsl.png",
+          "rightImage": "metal-precise.png",
+          "comparisonImage": "precise-comparison.png",
+          "purpose": "Same sine hash, safe arithmetic and precise FP32 functions",
+          "glslDefines": [],
+          "metalCompilerFlags": [
+            "-std=metal3.1",
+            "-mmacosx-version-min=14.0",
+            "-DCOMPARISON_CAPTURE=1",
+            "-fmetal-math-mode=safe",
+            "-fmetal-math-fp32-functions=precise"
+          ],
+          "metrics": {
+            "channelRange": "0...255",
+            "comparisonSpace": "Raw encoded RGB/RGBA8 PNG samples; no color-profile conversion",
+            "differingAlphaPixelsPercentage": 0,
+            "differingPixelDefinition": "At least one RGBA channel differs by one or more integer levels",
+            "differingPixelsPercentage": 0,
+            "differingRGBPixelsPercentage": 0,
+            "height": 400,
+            "maxAlphaError": 0,
+            "maxRGBError": 0,
+            "meanAbsoluteAlphaError": 0,
+            "meanAbsoluteRGBError": 0,
+            "rootMeanSquareRGBError": 0,
+            "width": 640
+          }
+        },
+        "integer": {
+          "leftImage": "glsl-integer.png",
+          "rightImage": "metal-integer.png",
+          "comparisonImage": "integer-comparison.png",
+          "purpose": "Different integer hash algorithm in both languages",
+          "glslDefines": [
+            "NOISE_INTEGER_HASH=1"
+          ],
+          "metalCompilerFlags": [
+            "-std=metal3.1",
+            "-mmacosx-version-min=14.0",
+            "-DCOMPARISON_CAPTURE=1",
+            "-fmetal-math-mode=fast",
+            "-fmetal-math-fp32-functions=fast",
+            "-DNOISE_INTEGER_HASH=1"
+          ],
+          "metrics": {
+            "channelRange": "0...255",
+            "comparisonSpace": "Raw encoded RGB/RGBA8 PNG samples; no color-profile conversion",
+            "differingAlphaPixelsPercentage": 0,
+            "differingPixelDefinition": "At least one RGBA channel differs by one or more integer levels",
+            "differingPixelsPercentage": 0,
+            "differingRGBPixelsPercentage": 0,
+            "height": 400,
+            "maxAlphaError": 0,
+            "maxRGBError": 0,
+            "meanAbsoluteAlphaError": 0,
+            "meanAbsoluteRGBError": 0,
+            "rootMeanSquareRGBError": 0,
+            "width": 640
+          }
+        }
       }
     }
   },
   "sharedSourceSHA256": {
     "assets/grid.png": "1d819b25fa43244899a7250c9958ffd50173ed512d86a7d0690c496d722679e8",
     "assets/stripes.png": "db7d7673ba5c6c3c5bacb32f3c075c72447e3155c791548ef1b29572e7458803",
-    "tools/check-bindings.swift": "4527d2166f6073d5b5ce874adbb54aebfb6066f250fae7437eea967a9b61b522",
-    "tools/compare.swift": "1866e053fb590cd6147a199b0e2b8e28e391a2124c39084fc86fc41d4f11d263",
+    "tools/check-bindings.swift": "babb65d5916f6cf0bde2cbc37133cc1d438ca59f41674d53d7e604e0158b9f9a",
+    "tools/check-math-captures.py": "465f19dbe95e6db89220ab8a4bc84e58c7f8b10f78080fd646d15d1d454cca03",
+    "tools/compare.swift": "8bdc5aaaa48d4ef9d620cdd7fb014314e4568070c5dd92de2308506aeafcbe13",
     "tools/make-inputs.py": "a128e574f204c4b7ad4a4bb0921619013ddd4b2b87efac955b8a0b196df190da",
     "tools/metal/ComparisonHarness.h": "923e3a62cbb7336368e34b3a578165a1e0ce0f80b9c4a75ae1be05c2bd110328",
-    "tools/record-capture.py": "3a5afd59e927da92757f3cd1fe6d9c6edbbbcbf59df1280fdaa2e974862ff8a9",
+    "tools/record-capture.py": "3b61a403b1fd0a9a89bf401e66d3fb1b67ed32a9ff28fffc1e90b180cf08b516",
     "tools/render-glsl.mm": "5484f891b907e6c45043b300941427fbda24059a2a3c1da5de6a9d70c18d61f2",
     "tools/render-metal.swift": "c9ae237645880f3a9b646cfce9bf8748cdc32ef1a3c46a1979885c235cdbe7f4",
-    "tools/render.sh": "3b2e8bed668534bfb9ef1b4a6b5a240debdbc9a425565abf595fd275128f04e7",
-    "tools/validate.sh": "f50f43f5b914b605d505fcf8f02a023a247e77ce9788737629fc59e7f7c822f8"
-  }
+    "tools/render.sh": "95382dd5315c1b92b7dcf56aee7875429349aa1dcb1e36dfcf1dd234aa8a0731",
+    "tools/validate.sh": "ae90248d853030da029ea43abe0138c7714b8424ff18f40ddec31ea105b11db0"
+  },
+  "additionalChecks": [
+    {
+      "example": "noise-hash",
+      "algorithm": "sine hash",
+      "configuration": "fast",
+      "capture": {
+        "api": "Metal",
+        "capture": "offscreen-render-pipeline",
+        "device": "Apple M3 Max",
+        "displayScale": 1,
+        "height": 640,
+        "origin": "top-left",
+        "os": "Version 26.7.1 (Build 25G241)",
+        "pixelFormat": "RGBA8Unorm",
+        "textureCount": 0,
+        "time": 0,
+        "width": 400
+      },
+      "metalCompilerFlags": [
+        "-std=metal3.1",
+        "-mmacosx-version-min=14.0",
+        "-DCOMPARISON_CAPTURE=1",
+        "-fmetal-math-mode=fast",
+        "-fmetal-math-fp32-functions=fast"
+      ],
+      "metrics": {
+        "channelRange": "0...255",
+        "comparisonSpace": "Raw encoded RGB/RGBA8 PNG samples; no color-profile conversion",
+        "differingAlphaPixelsPercentage": 0,
+        "differingPixelDefinition": "At least one RGBA channel differs by one or more integer levels",
+        "differingPixelsPercentage": 0,
+        "differingRGBPixelsPercentage": 0,
+        "height": 640,
+        "maxAlphaError": 0,
+        "maxRGBError": 0,
+        "meanAbsoluteAlphaError": 0,
+        "meanAbsoluteRGBError": 0,
+        "rootMeanSquareRGBError": 0,
+        "width": 400
+      },
+      "leftImageSHA256": "da7a404d80a46364f2cda158c501a526a2523a49d4a5a4bf470a296fd198dc9f",
+      "rightImageSHA256": "da7a404d80a46364f2cda158c501a526a2523a49d4a5a4bf470a296fd198dc9f",
+      "publishedComparison": null
+    },
+    {
+      "example": "noise-hash",
+      "algorithm": "sine hash",
+      "configuration": "precise",
+      "capture": {
+        "api": "Metal",
+        "capture": "offscreen-render-pipeline",
+        "device": "Apple M3 Max",
+        "displayScale": 1,
+        "height": 640,
+        "origin": "top-left",
+        "os": "Version 26.7.1 (Build 25G241)",
+        "pixelFormat": "RGBA8Unorm",
+        "textureCount": 0,
+        "time": 0,
+        "width": 400
+      },
+      "metalCompilerFlags": [
+        "-std=metal3.1",
+        "-mmacosx-version-min=14.0",
+        "-DCOMPARISON_CAPTURE=1",
+        "-fmetal-math-mode=safe",
+        "-fmetal-math-fp32-functions=precise"
+      ],
+      "metrics": {
+        "channelRange": "0...255",
+        "comparisonSpace": "Raw encoded RGB/RGBA8 PNG samples; no color-profile conversion",
+        "differingAlphaPixelsPercentage": 0,
+        "differingPixelDefinition": "At least one RGBA channel differs by one or more integer levels",
+        "differingPixelsPercentage": 0,
+        "differingRGBPixelsPercentage": 0,
+        "height": 640,
+        "maxAlphaError": 0,
+        "maxRGBError": 0,
+        "meanAbsoluteAlphaError": 0,
+        "meanAbsoluteRGBError": 0,
+        "rootMeanSquareRGBError": 0,
+        "width": 400
+      },
+      "leftImageSHA256": "da7a404d80a46364f2cda158c501a526a2523a49d4a5a4bf470a296fd198dc9f",
+      "rightImageSHA256": "da7a404d80a46364f2cda158c501a526a2523a49d4a5a4bf470a296fd198dc9f",
+      "publishedComparison": null
+    },
+    {
+      "example": "noise-hash",
+      "algorithm": "sine hash",
+      "configuration": "fast",
+      "capture": {
+        "api": "Metal",
+        "capture": "offscreen-render-pipeline",
+        "device": "Apple M3 Max",
+        "displayScale": 1,
+        "height": 640,
+        "origin": "top-left",
+        "os": "Version 26.7.1 (Build 25G241)",
+        "pixelFormat": "RGBA8Unorm",
+        "textureCount": 0,
+        "time": 17,
+        "width": 400
+      },
+      "metalCompilerFlags": [
+        "-std=metal3.1",
+        "-mmacosx-version-min=14.0",
+        "-DCOMPARISON_CAPTURE=1",
+        "-fmetal-math-mode=fast",
+        "-fmetal-math-fp32-functions=fast"
+      ],
+      "metrics": {
+        "channelRange": "0...255",
+        "comparisonSpace": "Raw encoded RGB/RGBA8 PNG samples; no color-profile conversion",
+        "differingAlphaPixelsPercentage": 0,
+        "differingPixelDefinition": "At least one RGBA channel differs by one or more integer levels",
+        "differingPixelsPercentage": 0,
+        "differingRGBPixelsPercentage": 0,
+        "height": 640,
+        "maxAlphaError": 0,
+        "maxRGBError": 0,
+        "meanAbsoluteAlphaError": 0,
+        "meanAbsoluteRGBError": 0,
+        "rootMeanSquareRGBError": 0,
+        "width": 400
+      },
+      "leftImageSHA256": "c45bbfde088ae0858990ab0348e9fe767f3992630a30e1d53679608f5c285eb4",
+      "rightImageSHA256": "c45bbfde088ae0858990ab0348e9fe767f3992630a30e1d53679608f5c285eb4",
+      "publishedComparison": null
+    },
+    {
+      "example": "noise-hash",
+      "algorithm": "sine hash",
+      "configuration": "precise",
+      "capture": {
+        "api": "Metal",
+        "capture": "offscreen-render-pipeline",
+        "device": "Apple M3 Max",
+        "displayScale": 1,
+        "height": 640,
+        "origin": "top-left",
+        "os": "Version 26.7.1 (Build 25G241)",
+        "pixelFormat": "RGBA8Unorm",
+        "textureCount": 0,
+        "time": 17,
+        "width": 400
+      },
+      "metalCompilerFlags": [
+        "-std=metal3.1",
+        "-mmacosx-version-min=14.0",
+        "-DCOMPARISON_CAPTURE=1",
+        "-fmetal-math-mode=safe",
+        "-fmetal-math-fp32-functions=precise"
+      ],
+      "metrics": {
+        "channelRange": "0...255",
+        "comparisonSpace": "Raw encoded RGB/RGBA8 PNG samples; no color-profile conversion",
+        "differingAlphaPixelsPercentage": 0,
+        "differingPixelDefinition": "At least one RGBA channel differs by one or more integer levels",
+        "differingPixelsPercentage": 0,
+        "differingRGBPixelsPercentage": 0,
+        "height": 640,
+        "maxAlphaError": 0,
+        "maxRGBError": 0,
+        "meanAbsoluteAlphaError": 0,
+        "meanAbsoluteRGBError": 0,
+        "rootMeanSquareRGBError": 0,
+        "width": 400
+      },
+      "leftImageSHA256": "c45bbfde088ae0858990ab0348e9fe767f3992630a30e1d53679608f5c285eb4",
+      "rightImageSHA256": "c45bbfde088ae0858990ab0348e9fe767f3992630a30e1d53679608f5c285eb4",
+      "publishedComparison": null
+    },
+    {
+      "example": "noise-hash",
+      "algorithm": "sine hash",
+      "configuration": "fast",
+      "capture": {
+        "api": "Metal",
+        "capture": "offscreen-render-pipeline",
+        "device": "Apple M3 Max",
+        "displayScale": 1,
+        "height": 640,
+        "origin": "top-left",
+        "os": "Version 26.7.1 (Build 25G241)",
+        "pixelFormat": "RGBA8Unorm",
+        "textureCount": 0,
+        "time": 4095,
+        "width": 400
+      },
+      "metalCompilerFlags": [
+        "-std=metal3.1",
+        "-mmacosx-version-min=14.0",
+        "-DCOMPARISON_CAPTURE=1",
+        "-fmetal-math-mode=fast",
+        "-fmetal-math-fp32-functions=fast"
+      ],
+      "metrics": {
+        "channelRange": "0...255",
+        "comparisonSpace": "Raw encoded RGB/RGBA8 PNG samples; no color-profile conversion",
+        "differingAlphaPixelsPercentage": 0,
+        "differingPixelDefinition": "At least one RGBA channel differs by one or more integer levels",
+        "differingPixelsPercentage": 0,
+        "differingRGBPixelsPercentage": 0,
+        "height": 640,
+        "maxAlphaError": 0,
+        "maxRGBError": 0,
+        "meanAbsoluteAlphaError": 0,
+        "meanAbsoluteRGBError": 0,
+        "rootMeanSquareRGBError": 0,
+        "width": 400
+      },
+      "leftImageSHA256": "8cd4116d5772183e25f91ce99ed85480cd7edb65acd15a230dbabbe8e7d35290",
+      "rightImageSHA256": "8cd4116d5772183e25f91ce99ed85480cd7edb65acd15a230dbabbe8e7d35290",
+      "publishedComparison": "noise-hash/large-seed-fast-comparison.png"
+    },
+    {
+      "example": "noise-hash",
+      "algorithm": "sine hash",
+      "configuration": "precise",
+      "capture": {
+        "api": "Metal",
+        "capture": "offscreen-render-pipeline",
+        "device": "Apple M3 Max",
+        "displayScale": 1,
+        "height": 640,
+        "origin": "top-left",
+        "os": "Version 26.7.1 (Build 25G241)",
+        "pixelFormat": "RGBA8Unorm",
+        "textureCount": 0,
+        "time": 4095,
+        "width": 400
+      },
+      "metalCompilerFlags": [
+        "-std=metal3.1",
+        "-mmacosx-version-min=14.0",
+        "-DCOMPARISON_CAPTURE=1",
+        "-fmetal-math-mode=safe",
+        "-fmetal-math-fp32-functions=precise"
+      ],
+      "metrics": {
+        "channelRange": "0...255",
+        "comparisonSpace": "Raw encoded RGB/RGBA8 PNG samples; no color-profile conversion",
+        "differingAlphaPixelsPercentage": 0,
+        "differingPixelDefinition": "At least one RGBA channel differs by one or more integer levels",
+        "differingPixelsPercentage": 67.221875,
+        "differingRGBPixelsPercentage": 67.221875,
+        "height": 640,
+        "maxAlphaError": 0,
+        "maxRGBError": 127,
+        "meanAbsoluteAlphaError": 0,
+        "meanAbsoluteRGBError": 43.336416666666665,
+        "rootMeanSquareRGBError": 65.78257526376824,
+        "width": 400
+      },
+      "leftImageSHA256": "8cd4116d5772183e25f91ce99ed85480cd7edb65acd15a230dbabbe8e7d35290",
+      "rightImageSHA256": "3b59a299944c05b589370d77b9e04fc71691a2d127145a08ba244922b9f7b012",
+      "publishedComparison": "noise-hash/large-seed-precise-comparison.png"
+    },
+    {
+      "example": "noise-hash",
+      "algorithm": "integer hash control",
+      "configuration": "fast",
+      "glslDefines": [
+        "NOISE_INTEGER_HASH=1"
+      ],
+      "capture": {
+        "api": "Metal",
+        "capture": "offscreen-render-pipeline",
+        "device": "Apple M3 Max",
+        "displayScale": 1,
+        "height": 640,
+        "origin": "top-left",
+        "os": "Version 26.7.1 (Build 25G241)",
+        "pixelFormat": "RGBA8Unorm",
+        "textureCount": 0,
+        "time": 4095,
+        "width": 400
+      },
+      "metalCompilerFlags": [
+        "-std=metal3.1",
+        "-mmacosx-version-min=14.0",
+        "-DCOMPARISON_CAPTURE=1",
+        "-fmetal-math-mode=fast",
+        "-fmetal-math-fp32-functions=fast",
+        "-DNOISE_INTEGER_HASH=1"
+      ],
+      "metrics": {
+        "channelRange": "0...255",
+        "comparisonSpace": "Raw encoded RGB/RGBA8 PNG samples; no color-profile conversion",
+        "differingAlphaPixelsPercentage": 0,
+        "differingPixelDefinition": "At least one RGBA channel differs by one or more integer levels",
+        "differingPixelsPercentage": 0,
+        "differingRGBPixelsPercentage": 0,
+        "height": 640,
+        "maxAlphaError": 0,
+        "maxRGBError": 0,
+        "meanAbsoluteAlphaError": 0,
+        "meanAbsoluteRGBError": 0,
+        "rootMeanSquareRGBError": 0,
+        "width": 400
+      },
+      "leftImageSHA256": "982d2cc7cdb945aca36ed21f5fed4bb2e6da332b2cadc46bb63e0adab5d53d3d",
+      "rightImageSHA256": "982d2cc7cdb945aca36ed21f5fed4bb2e6da332b2cadc46bb63e0adab5d53d3d",
+      "publishedComparison": "noise-hash/large-seed-integer-comparison.png"
+    }
+  ]
 }
