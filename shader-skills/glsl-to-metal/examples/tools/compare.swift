@@ -188,7 +188,8 @@ func measure(_ lhs: Pixels, _ rhs: Pixels) throws -> Metrics {
         differingAlphaPixelsPercentage: percent(alphaPixels), differingPixelsPercentage: percent(anyPixels))
 }
 
-func compose(_ left: Pixels, _ right: Pixels, title: String, metrics: Metrics) throws -> Pixels {
+func compose(_ left: Pixels, _ right: Pixels, title: String, leftLabel: String,
+             rightLabel: String, metrics: Metrics) throws -> Pixels {
     let margin = 24, gap = 16, imageTop = 120
     let width = margin * 2 + left.width * 2 + gap
     let height = imageTop + left.height + 84
@@ -212,8 +213,8 @@ func compose(_ left: Pixels, _ right: Pixels, title: String, metrics: Metrics) t
     let available = width - margin * 2
     label(title, x: margin, top: 19, size: 26, weight: .semibold, color: white, maxWidth: available)
     label("Matched captures · \(left.width) × \(left.height) pixels each · no rescaling", x: margin, top: 58, size: 13, weight: .regular, color: muted, maxWidth: available)
-    label("GLSL · OpenGL", x: margin, top: 88, size: 16, weight: .medium, color: white, maxWidth: left.width)
-    label("Metal · offscreen", x: margin + left.width + gap, top: 88, size: 16, weight: .medium, color: white, maxWidth: left.width)
+    label(leftLabel, x: margin, top: 88, size: 16, weight: .medium, color: white, maxWidth: left.width)
+    label(rightLabel, x: margin + left.width + gap, top: 88, size: 16, weight: .medium, color: white, maxWidth: left.width)
     let summary = String(format: "RGB mean error: %.4f / 255    ·    Maximum: %d / 255    ·    Pixels differing: %.4f%%", metrics.meanAbsoluteRGBError, metrics.maxRGBError, metrics.differingPixelsPercentage)
     label(summary, x: margin, top: imageTop + left.height + 17, size: 13, weight: .medium, color: white, maxWidth: available)
     let alpha = String(format: "Alpha mean error: %.4f / 255 · max %d / 255. Any nonzero RGBA difference counts; no tolerance is hidden.", metrics.meanAbsoluteAlphaError, metrics.maxAlphaError)
@@ -234,13 +235,25 @@ func compose(_ left: Pixels, _ right: Pixels, title: String, metrics: Metrics) t
 
 do {
     let args = Array(CommandLine.arguments.dropFirst())
-    guard args.count == 6, args[4] == "--title" else {
-        throw ComparisonError("Usage: compare <glsl.png> <metal.png> <comparison.png> <metrics.json> --title '<Example name>'")
+    guard args.count >= 6, args.count % 2 == 0 else {
+        throw ComparisonError("Usage: compare <left.png> <right.png> <comparison.png> <metrics.json> --title NAME [--left-label TEXT --right-label TEXT]")
     }
+    var options: [String: String] = [:]
+    for index in stride(from: 4, to: args.count, by: 2) {
+        let key = args[index]
+        guard ["--title", "--left-label", "--right-label"].contains(key), options[key] == nil else {
+            throw ComparisonError("Unknown or duplicate option: \(key)")
+        }
+        options[key] = args[index + 1]
+    }
+    guard let title = options["--title"] else { throw ComparisonError("--title is required") }
     let left = try readPNG(URL(fileURLWithPath: args[0]))
     let right = try readPNG(URL(fileURLWithPath: args[1]))
     let metrics = try measure(left, right)
-    let composite = try compose(left, right, title: args[5], metrics: metrics)
+    let composite = try compose(left, right, title: title,
+                                leftLabel: options["--left-label"] ?? "GLSL · OpenGL",
+                                rightLabel: options["--right-label"] ?? "Metal · offscreen",
+                                metrics: metrics)
     try writePNG(composite, to: URL(fileURLWithPath: args[2]))
     let encoder = JSONEncoder()
     encoder.outputFormatting = [.prettyPrinted, .sortedKeys]

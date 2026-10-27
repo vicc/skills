@@ -1,0 +1,15 @@
+{
+  "channelRange" : "0...255",
+  "comparisonSpace" : "Raw encoded RGB\/RGBA8 PNG samples; no color-profile conversion",
+  "differingAlphaPixelsPercentage" : 0,
+  "differingPixelDefinition" : "At least one RGBA channel differs by one or more integer levels",
+  "differingPixelsPercentage" : 85.16015625,
+  "differingRGBPixelsPercentage" : 85.16015625,
+  "height" : 400,
+  "maxAlphaError" : 0,
+  "maxRGBError" : 243,
+  "meanAbsoluteAlphaError" : 0,
+  "meanAbsoluteRGBError" : 23.595052083333332,
+  "rootMeanSquareRGBError" : 62.36393866934774,
+  "width" : 640
+}

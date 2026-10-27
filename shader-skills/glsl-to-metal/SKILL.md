@@ -40,6 +40,8 @@ Explain the mapping of `fragCoord`, UVs, resolution, aspect correction, origins,
 
 GLSL fragment coordinates typically start at the lower left, but check source conventions before flipping Y. Match pixel centers when relevant. Subtract the center before centered rotation, preserve the source's aspect-correction order, and guard zero-sized layouts. For interactive shaders, translate touch or pointer positions into the same coordinate system; preserve any used Shadertoy mouse press/click-origin semantics.
 
+Handle fragment-coordinate Y conversion separately from texture-image orientation. Inspect the uploaded rows, loader options, and existing UV transforms before adding a texture flip; use an asymmetric image with labeled or colored corners to catch a missing or double flip.
+
 ### Types and math
 
 - Map `vec2/3/4` to `float2/3/4` and `mat2/3/4` to `float2x2/3x3/4x4`. Check constructors, column layout, and multiplication order. GLSL matrix `*` and component-wise `matrixCompMult` are distinct operations.
@@ -48,6 +50,7 @@ GLSL fragment coordinates typically start at the lower left, but check source co
 - Check overloads and scalar/vector types for builtins actually used. Translate GLSL `out`/`inout` helpers into valid Metal references with the correct address space, rather than leaving GLSL parameter qualifiers behind.
 - Translate texture sampling, precision qualifiers, and derivatives for the chosen execution context. `dFdx`/`dFdy` map to `dfdx`/`dfdy` where supported; check derivative orientation after coordinate changes and do not assume fragment derivatives work in compute kernels.
 - Preserve recognizable parameter names. Use `float` for procedural and coordinate math unless reduced precision is justified; return the type required by the API.
+- For precision-sensitive noise or hashes such as `fract(sin(x) * largeConstant)`, read [numerical precision and fast math](references/numerical-precision.md). Check both arithmetic optimizations and math-function selection, compare explicit modes on the target GPU, and report remaining differences. Do not silently substitute a different hash or assume precise math guarantees the GLSL pattern.
 
 Remove GLSL-only builtins and declarations. Flag undefined source math that materially affects the port, including reversed/equal `smoothstep` edges, zero-length normalization, or invalid `pow` domains. If regularizing such behavior, explain the intended approximation rather than silently changing the effect.
 
@@ -83,7 +86,7 @@ When source rendering is available, compare at matching inputs/time, different a
 
 ## Reference examples
 
-When a concrete implementation would help, consult the [example gallery](examples/README.md): a procedural SwiftUI fill, inverse ripple distortion, and two-texture Metal renderer. Read only the relevant example. Its controlled captures and version table describe actual validation; do not generalize those results to other inputs, GPUs, OS releases, or end-to-end SwiftUI appearance.
+When a concrete implementation would help, consult the [example gallery](examples/README.md): a procedural SwiftUI fill, inverse ripple distortion, and two-texture Metal renderer, plus [negative-modulo](examples/negative-modulo/README.md) and [noise-hash](examples/noise-hash/README.md) comparisons. Read only the relevant example. Its controlled captures and version table describe actual validation; do not generalize those results to other inputs, GPUs, OS releases, or end-to-end SwiftUI appearance.
 
 ## Language references
 

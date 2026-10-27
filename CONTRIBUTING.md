@@ -14,6 +14,7 @@ These are manual behavioral scenarios, not an automated test suite or claims tha
 | --- | --- |
 | Procedural GLSL with resolution and time | A suitable SwiftUI integration with matching coordinate units and a stable time origin. |
 | `mod(-0.5, 1.0)` and `atan(y, x)` | Preserve the modulo result of `0.5` and the two-argument angle semantics. |
+| A precision-sensitive sine hash | Preserve the source hash, compare explicit Metal math settings, record observed differences, and explain any alternative pattern before substituting it. |
 | Native macOS `MTKView` integration | An AppKit bridge, pixel-based drawable sizing, and resize/backing-scale handling. |
 | iOS 17/macOS 14 deployment targets | Core shader APIs work without an unguarded dependency on newer precompilation APIs. |
 | Two independent image channels | Account for SwiftUI's one-image-argument limit and select a faithful rendering path. |

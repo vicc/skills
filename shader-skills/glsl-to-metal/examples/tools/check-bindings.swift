@@ -20,6 +20,11 @@ struct CheckBindings {
         let ripple = Shader(function: ShaderFunction(library: library, name: "rippleDistortion"),
                             arguments: [.float2(640, 400), .float(1.25), .float(7)])
         try await ripple.compile(as: .distortionEffect)
+        for name in ["negativeModulo", "noiseHash"] {
+            let shader = Shader(function: ShaderFunction(library: library, name: name),
+                                arguments: [.boundingRect, .float(1.25)])
+            try await shader.compile(as: .shapeStyle)
+        }
         print("PASS: SwiftUI shape-style and distortion shader bindings precompiled on this Mac.")
     }
 }
