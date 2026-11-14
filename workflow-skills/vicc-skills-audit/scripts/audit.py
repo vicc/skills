@@ -19,11 +19,12 @@ from functools import lru_cache
 
 SESSION_ID = re.compile(r"([a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12})\.jsonl(?:\.zst)?$")
 CATALOG_ITEM = re.compile(r"^- (.+?): .*?\(file: (.+?/SKILL\.md)\)\s*$")
-SHELL_PATH = re.compile(r"(?:[~\w.*{}$+@()-]+/)+SKILL\.md")
+SHELL_PATH = re.compile(r"/?(?:[~\w.*{}$+@()-]+/)+SKILL\.md")
 NAME = re.compile(r"(?m)^name:\s*['\"]?([\w.:-]+)")
 READ = re.compile(r"\b(cat|sed|head|tail|bat|awk|less|more|Get-Content|read_file|readFileSync|readFile|open|read_text|read_bytes)\b")
 LOOKUP = re.compile(r"\b(ls|find|rg|grep|stat|test|shasum|cp|mv|rm|mkdir|touch|write_text|writeFile|apply_patch)\b")
 SKILL_TOOL = re.compile(r"skills__read|skill_read|skills\.read")
+FILE_READ_TOOL = re.compile(r"(?:^|__|[.:])(?:read_file|read_text_file|read_multiple_files|readFile|readFileSync|read_text|read_bytes)$")
 SIGNAL = re.compile(rb"session_meta|turn_context|task_started|turn_started|function_call|custom_tool_call")
 PAGE = 350
 
@@ -83,7 +84,7 @@ def metadata(path, home):
     try:
         with session_lines(path) as lines:
             for raw in lines:
-                if b"<skills_instructions>" not in raw and b'"type":"token_count"' not in raw:
+                if b"<skills_instructions>" not in raw and b'"token_count"' not in raw:
                     continue
                 try:
                     data = json.loads(raw)
@@ -131,7 +132,8 @@ def plugin_path(path):
 def skill_id(path, home, codex_home):
     plugin = plugin_path(path)
     if plugin:
-        return f"{plugin[1]}:{plugin[3]}"
+        marketplace, name, _, skill = plugin
+        return f"plugin:{marketplace}:{name}:{skill}"
     for root, label in ((codex_home / "skills/.system", "built-in"),
                         (codex_home / "skills", "local"), (home / ".agents/skills", "agents")):
         if path.is_relative_to(root):
@@ -233,7 +235,7 @@ def scan(entry):
     try:
         with session_lines(path) as lines:
             for raw in lines:
-                if not SIGNAL.search(raw, 0, 170) and not (b'"role":"user"' in raw[:420] and b"<skill>" in raw):
+                if not SIGNAL.search(raw, 0, 170) and b"<skill>" not in raw:
                     continue
                 output = b"_call_output" in raw[:175]
                 if output and not calls:
@@ -269,22 +271,24 @@ def scan(entry):
                 call_id = payload.get("call_id")
                 if kind in ("function_call", "custom_tool_call") and call_id:
                     arg = as_text(payload.get("input") or payload.get("arguments") or "")
-                    skill_reader = SKILL_TOOL.search(str(payload.get("name", "")) + " " + arg)
-                    if not skill_reader and ("SKILL.md" not in arg or not READ.search(arg)):
+                    tool = str(payload.get("name", ""))
+                    skill_reader = SKILL_TOOL.search(tool + " " + arg)
+                    file_reader = FILE_READ_TOOL.search(tool)
+                    if not skill_reader and ("SKILL.md" not in arg or not (file_reader or READ.search(arg))):
                         continue
                     paths = {}
                     for match in SHELL_PATH.finditer(arg):
                         prefix = arg[max(0, match.start() - 400):match.start()]
                         command = re.split(r";|&&|\|\||\n|\\n", prefix)[-1]
                         loop_read = not LOOKUP.search(command) and re.search(r"\bfor\b", prefix) and READ.search(prefix)
-                        if (READ.search(command) or skill_reader or loop_read) and (key := resolve(match[0])):
+                        if (READ.search(command) or skill_reader or file_reader or loop_read) and (key := resolve(match[0])):
                             paths[key] = match[0]
                     if skill_reader and not paths:
                         for key, row in SCAN_ROWS.items():
                             if re.search(r"(?<![\w-])" + re.escape(row["name"]) + r"(?![\w-])", arg):
                                 paths[key] = row["path"]
                     calls[call_id] = (turn, ts, paths)
-                elif output and call_id in calls:
+                elif kind in ("function_call_output", "custom_tool_call_output") and call_id in calls:
                     called_turn, called_at, paths = calls.pop(call_id)
                     result = as_text(payload.get("output") or payload.get("content") or "")
                     result = result.replace("\\n", "\n").replace('\\"', '"')
@@ -387,26 +391,41 @@ def scan_references(rows, ids, args):
     patterns = {key: re.compile(r"(?<![\w-])" + re.escape(path.parent.name) + r"(?![\w-])")
                 for key, path in candidates.items()}
     matches = {key: [] for key in ids}
-    examined = inaccessible = 0
-    files = {Path(row["path"]) for row in rows.values() if row["owner"] == "plugin" and row["on_disk"]}
-    for root in scope:
+    examined = 0
+    skipped = set()
+    installed = {Path(row["path"]) for row in rows.values() if row["on_disk"]}
+    linked_roots = {path.parent for path in installed if path.parent.is_symlink()}
+    files = set(installed)
+
+    def record_walk_error(error):
+        skipped.add(Path(error.filename))
+
+    for root in [*scope, *sorted(linked_roots)]:
         if root.is_file():
             files.add(root)
             continue
-        for directory, folders, names in os.walk(root):
+        if not root.exists() and not root.is_symlink():
+            continue
+        for directory, folders, names in os.walk(root, onerror=record_walk_error):
             folders[:] = [name for name in folders if name not in {".git", "node_modules", "build", "dist", "work", "outputs", ".venv"}]
+            for name in folders[:]:
+                path = Path(directory) / name
+                if path.is_symlink():
+                    folders.remove(name)
+                    if path not in linked_roots:
+                        skipped.add(path)
             for name in names:
                 path = Path(directory) / name
                 if path.suffix.lower() in {".md", ".toml", ".yaml", ".yml", ".json", ".sh", ".py"}:
                     files.add(path)
     for path in sorted(files):
         try:
-            if path.is_symlink() or path.stat().st_size > 2_000_000:
-                inaccessible += 1
+            if (path.is_symlink() and path not in installed) or path.stat().st_size > 2_000_000:
+                skipped.add(path)
                 continue
             content = path.read_text(errors="replace")
         except OSError:
-            inaccessible += 1
+            skipped.add(path)
             continue
         examined += 1
         for key, pattern in patterns.items():
@@ -415,8 +434,9 @@ def scan_references(rows, ids, args):
                 continue
             for hit in pattern.finditer(content):
                 matches[key].append({"file": str(path), "line": content.count("\n", 0, hit.start()) + 1})
-    return {"scope": [str(root) for root in scope] + ["Inventoried plugin SKILL.md files"], "files_examined": examined,
-            "files_skipped": inaccessible, "matches": matches}
+    return {"scope": [str(root) for root in [*scope, *sorted(linked_roots)]] + ["Inventoried SKILL.md files"],
+            "files_examined": examined, "files_skipped": len(skipped),
+            "skipped_paths": [str(path) for path in sorted(skipped)], "matches": matches}
 
 
 def measure(block, catalog, window, date, rows, candidates, args):
@@ -509,6 +529,8 @@ def main():
     historical, _, _, inventory_date = metadata(args.inventory_session, args.home)
     if args.from_audit:
         result = json.loads(args.from_audit.read_text())
+        if any(skill_id(Path(row["path"]), args.home, args.codex_home) != row["id"] for row in result["skills"]):
+            parser.error("The saved skill IDs do not match this installation or collector version. Rerun without --from-audit.")
         rows = {row["id"]: row for row in result["skills"]}
         for row in rows.values():
             row["in_catalog"] = False

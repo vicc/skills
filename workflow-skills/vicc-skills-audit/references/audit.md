@@ -10,6 +10,8 @@ The collector reads local sessions and uses Python's zstandard support, optional
 
 Use a locally available `tiktoken` tokenizer with an available encoding cache. Count the rendered catalog with `o200k_base` as an estimate. Use the actual context window reported by the same session. For verified removals, pass repeated `--candidate` IDs from the inventory. Reuse the prior aggregate with `--from-audit` to avoid rescanning. Combined savings re-encode the original text after removing those entries. Codex may allocate more space to remaining descriptions. An off-catalog file saves zero in a measured catalog. When the catalog cannot be measured, all removal savings are unavailable. Convert tokens to rough double-spaced pages at 350 tokens per page (about 250 English words).
 
+Copy IDs from the resulting inventory. Plugin IDs include the marketplace so matching plugin names from different sources stay separate. If the collector rejects a previously saved audit because the IDs have changed, rerun the scan without `--from-audit`.
+
 For a fresh installation, startup measurement needs `tiktoken` in the same Python environment as the collector. With dependency setup authorized, install `tiktoken` using that environment’s package manager and run `python3 -c 'import tiktoken; tiktoken.get_encoding("o200k_base")'` once to cache the encoding. The collector itself runs offline. Inventory and usage still work without this setup.
 
 ## Cleanup decisions
@@ -21,6 +23,7 @@ Under **Recommendations**, use sentence-cased headings: **Low risk deletions** f
 Compute savings for low-risk candidates alone and for the union with eligible medium-risk candidates. Measure the union directly so each listing counts once. Show the conditional total in the Potential savings card and each risk group's estimate under Recommendations. This keeps the distinction visible without crowding the summary card.
 
 - If a standalone copy has a verified replacement, no unique workflow or needed support files, and no inbound references in the searched scope, recommend reversible archival. Name any scope limits such as other agents sharing the directory or unscanned projects.
+- Inspect skipped files and directories when evaluating inbound references. The collector scans known linked skill folders. If relevant files remain unreadable or unscanned, mark the candidate for review until that gap is resolved.
 - If there are inbound references or unique steps, identify what needs to be preserved or repointed and mark it for review. Cite paths and line numbers. Read the referring file so an informational mention is distinguishable from an actual dependency.
 - If usage is unknown, the replacement is absent from the active scope, or coverage is too narrow, mark for review. Consider recency when install dates are reliable.
 - Keep plugin and system files with their owner. Consider whole-plugin removal only after checking sibling skills, connector/tool use, and capabilities lost. Never recommend deleting individual files from a plugin cache.
