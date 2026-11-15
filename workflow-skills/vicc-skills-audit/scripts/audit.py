@@ -25,6 +25,9 @@ READ = re.compile(r"\b(cat|sed|head|tail|bat|awk|less|more|Get-Content|read_file
 LOOKUP = re.compile(r"\b(ls|find|rg|grep|stat|test|shasum|cp|mv|rm|mkdir|touch|write_text|writeFile|apply_patch)\b")
 SKILL_TOOL = re.compile(r"skills__read|skill_read|skills\.read")
 FILE_READ_TOOL = re.compile(r"(?:^|__|[.:])(?:read_file|read_text_file|read_multiple_files|readFile|readFileSync|read_text|read_bytes)$")
+SESSION_FIELD = r'["\']?session_id["\']?\s*:\s*["\']?(\d+)'
+POLL_CALL = re.compile(r"\btools\.write_stdin\s*\(\s*\{[^{}]*?" + SESSION_FIELD)
+RUNNING_SESSION = re.compile(r'"session_id"\s*:\s*"?(\d+)|(?:^|\n)Process running with session ID\s+(\d+)')
 SIGNAL = re.compile(rb"session_meta|turn_context|task_started|turn_started|function_call|custom_tool_call")
 PAGE = 350
 
@@ -40,17 +43,23 @@ def session_lines(path):
     except ImportError:
         zstd = None
     if zstd is not None:
-        with zstd.open(path, "rb") as stream:
-            yield stream
+        try:
+            with zstd.open(path, "rb") as stream:
+                yield stream
+        except zstd.ZstdError as error:
+            raise OSError("Could not read compressed session") from error
         return
     try:
         import zstandard
     except ImportError:
         zstandard = None
     if zstandard is not None:
-        with path.open("rb") as source, zstandard.ZstdDecompressor().stream_reader(source) as reader:
-            with io.BufferedReader(reader, 1 << 20) as stream:
-                yield stream
+        try:
+            with path.open("rb") as source, zstandard.ZstdDecompressor().stream_reader(source) as reader:
+                with io.BufferedReader(reader, 1 << 20) as stream:
+                    yield stream
+        except zstandard.ZstdError as error:
+            raise OSError("Could not read compressed session") from error
         return
     command = shutil.which("zstd")
     if not command:
@@ -114,7 +123,7 @@ def metadata(path, home):
                     if path.suffix != ".zst":
                         break
     except (OSError, EOFError):
-        pass
+        return {}, None, None, None
     if block is not None and not catalog and re.search(r"^-\s+\S+:", block.split("### Available skills", 1)[-1], re.M):
         return {}, None, None, date
     return catalog, block, window, date
@@ -216,6 +225,13 @@ def as_text(content):
     return content if isinstance(content, str) else json.dumps(content, ensure_ascii=False)
 
 
+def tool_output_text(content):
+    if isinstance(content, list):
+        return "\n".join(as_text(part.get("text", part) if isinstance(part, dict) else part)
+                         for part in content)
+    return as_text(content)
+
+
 @lru_cache(maxsize=512)
 def instruction_lines(path):
     try:
@@ -229,6 +245,7 @@ def instruction_lines(path):
 def scan(entry):
     tid, path = entry
     calls = {}
+    terminal_sessions = {}
     evidence = set()
     parent = fork = first = last = None
     turn = "unsegmented"
@@ -240,7 +257,7 @@ def scan(entry):
                 output = b"_call_output" in raw[:175]
                 if output and not calls:
                     continue
-                if b'_call",' in raw[:175] and b"SKILL.md" not in raw and b"skill" not in raw:
+                if b'_call",' in raw[:175] and not any(marker in raw for marker in (b"SKILL.md", b"skill", b"write_stdin")):
                     continue
                 try:
                     item = json.loads(raw)
@@ -272,6 +289,11 @@ def scan(entry):
                 if kind in ("function_call", "custom_tool_call") and call_id:
                     arg = as_text(payload.get("input") or payload.get("arguments") or "")
                     tool = str(payload.get("name", ""))
+                    poll = (re.search(SESSION_FIELD, arg) if tool.split("__")[-1] == "write_stdin"
+                            else POLL_CALL.search(arg))
+                    if poll and (original := terminal_sessions.pop(poll[1], None)):
+                        calls[call_id] = original
+                        continue
                     skill_reader = SKILL_TOOL.search(tool + " " + arg)
                     file_reader = FILE_READ_TOOL.search(tool)
                     if not skill_reader and ("SKILL.md" not in arg or not (file_reader or READ.search(arg))):
@@ -290,10 +312,13 @@ def scan(entry):
                     calls[call_id] = (turn, ts, paths)
                 elif kind in ("function_call_output", "custom_tool_call_output") and call_id in calls:
                     called_turn, called_at, paths = calls.pop(call_id)
-                    result = as_text(payload.get("output") or payload.get("content") or "")
+                    result = tool_output_text(payload.get("output") or payload.get("content") or "")
                     result = result.replace("\\n", "\n").replace('\\"', '"')
                     if payload.get("is_error") or re.search(r'"isError":\s*true', result[:800]):
                         continue
+                    running = {match[1] or match[2] for match in RUNNING_SESSION.finditer(result[:2000])}
+                    if len(running) == 1:
+                        terminal_sessions[running.pop()] = (called_turn, called_at, paths)
                     headers = {name.lower() for name in NAME.findall(result)}
                     for key in paths:
                         slug = Path(SCAN_ROWS[key]["path"]).parent.name
@@ -312,10 +337,6 @@ def scan(entry):
                             if len(matches) == 1:
                                 evidence.add((next(iter(matches)), called_turn, called_at))
     except (EOFError, OSError) as error:
-        return tid, parent, fork, first, last, evidence, type(error).__name__
-    except Exception as error:
-        if type(error).__name__ != "ZstdError":
-            raise
         return tid, parent, fork, first, last, evidence, type(error).__name__
     return tid, parent, fork, first, last, evidence, None
 
