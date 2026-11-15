@@ -2,7 +2,7 @@
 
 **Bring the idea. Let your agent cook.**
 
-Skills are reusable instructions that help an AI coding assistant tackle specific tasks. This collection helps you bring visual effects into Apple apps, work through code reviews, and audit your installed Codex skills.
+Skills are reusable instructions that help an AI coding assistant tackle specific tasks. This collection helps you bring visual effects into Apple apps, work through code reviews, audit your installed Codex skills, and model parts for 3D printing.
 
 You describe what you want. The skill gives your agent a workflow to follow.
 
@@ -13,6 +13,7 @@ You describe what you want. The skill gives your agent a workflow to follow.
 | [GLSL to Metal](https://github.com/vicc/skills/tree/main/skills/vicc-convert-glsl-to-metal) | Bring animated backgrounds, ripples, and other shader effects into iPhone and Mac apps. |
 | [Code Review Loop](https://github.com/vicc/skills/tree/main/skills/code-review-loop) | Get code reviewed, work through fixes, and check the results before merging. |
 | [Vicc Skills Audit](skills/vicc-skills-audit/SKILL.md) | See which Codex skills you use, what they cost at chat startup, and what you could remove. |
+| [OpenSCAD](skills/vicc-model-with-openscad/SKILL.md) | Model printable parts and connectors, preview them from several angles, and export STL files. |
 
 Install the skills you need. Once Codex confirms installation, open your project and try a starter prompt below.
 
@@ -108,6 +109,27 @@ It’s a good fit for prototypes and small design changes you can run and verify
 
 [How the loop decides it’s done →](https://github.com/vicc/skills/tree/main/skills/code-review-loop#what-counts-as-done)
 
+## OpenSCAD
+
+Use this skill to create or edit parametric parts, render models with JSON parameter overrides, or design printable connectors such as snap latches and dovetails. Install OpenSCAD locally to run the validation, preview, and export scripts.
+
+### Add it
+
+Open Codex and paste:
+
+```text
+Install the vicc-model-with-openscad skill from:
+https://github.com/vicc/skills/tree/main/skills/vicc-model-with-openscad
+```
+
+### Try it
+
+```text
+Use $vicc-model-with-openscad to design an 80 × 50 × 12 mm desk tray
+with 2 mm walls and a 2 mm floor. Give me the editable SCAD file,
+six preview views, and an STL.
+```
+
 ## Contributing and license
 
 Found something confusing or have an improvement? See [Contributing](https://github.com/vicc/skills/blob/main/CONTRIBUTING.md).
@@ -124,6 +146,7 @@ Clone or download this repository. Copy the entire folder for each skill you wan
 | GLSL to Metal | `skills/vicc-convert-glsl-to-metal` |
 | Code Review Loop | `skills/code-review-loop` |
 | Vicc Skills Audit | `skills/vicc-skills-audit` |
+| OpenSCAD | `skills/vicc-model-with-openscad` |
 
 If a skill is already installed, review your existing copy before replacing it.
 
