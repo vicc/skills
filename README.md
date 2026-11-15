@@ -11,8 +11,8 @@ You describe what you want. The skill gives your agent a workflow to follow.
 | Skill | What it helps you do |
 | --- | --- |
 | [GLSL to Metal](https://github.com/vicc/skills/tree/main/skills/vicc-convert-glsl-to-metal) | Bring animated backgrounds, ripples, and other shader effects into iPhone and Mac apps. |
-| [Code Review Loop](https://github.com/vicc/skills/tree/main/skills/code-review-loop) | Get code reviewed, work through fixes, and check the results before merging. |
-| [Vicc Skills Audit](skills/vicc-skills-audit/SKILL.md) | See which Codex skills you use, what they cost at chat startup, and what you could remove. |
+| [Vicc Review Until Clean](https://github.com/vicc/skills/tree/main/skills/vicc-review-until-clean) | Review and fix local changes until they pass, or run the full GitHub PR loop. |
+| [Vicc Audit Skills](skills/vicc-audit-skills/SKILL.md) | See which Codex skills you use, what they cost at chat startup, and what you could remove. |
 | [OpenSCAD](skills/vicc-model-with-openscad/SKILL.md) | Model printable parts and connectors, preview them from several angles, and export STL files. |
 
 Install the skills you need. Once Codex confirms installation, open your project and try a starter prompt below.
@@ -61,53 +61,27 @@ The examples target iOS 17+ and macOS 14+. They’ve been compiled for both and 
 
 [Side-by-side comparisons and testing details →](https://github.com/vicc/skills/tree/main/skills/vicc-convert-glsl-to-metal/examples)
 
-## Code Review Loop
+## Vicc Review Until Clean
 
-**Let your agent check your changes, fix issues, and take another look.**
+By default, Codex reviews your local changes, fixes actionable findings, and repeats review and validation on the updated diff.
 
-A pull request, or PR, proposes code changes before they’re merged into a project. This skill combines GitHub’s Codex review with a separate broader review, works through actionable findings, and repeats the checks on the updated code.
-
-You decide when to merge.
-
-### Add it
-
-Open Codex and paste:
+Install it in Codex:
 
 ```text
-Install the code-review-loop skill from:
-https://github.com/vicc/skills/tree/main/skills/code-review-loop
+Install the vicc-review-until-clean skill from:
+https://github.com/vicc/skills/tree/main/skills/vicc-review-until-clean
 ```
 
-### Try it
+Try it:
 
 ```text
-Use $code-review-loop to open a pull request for these
-changes against main.
-
-Run the GitHub Codex review and a separate broader review.
-Fix actionable findings and run the relevant checks.
-Repeat until both reviews are clean for the latest changes.
-
-Explain any blockers in plain language.
-Leave the final merge to me.
+Use $vicc-review-until-clean to review my local changes,
+fix actionable findings, and rerun review and checks until they pass.
 ```
 
-Here, `main` is the branch your changes should land on. Replace it if your project uses another branch.
+For the full GitHub workflow, ask for the **full GitHub review loop** and name the target branch or an existing PR. That path combines GitHub's `@codex review` with a separate broader review and validates the latest revisions.
 
-### What you’ll need
-
-- **A local Git project connected to GitHub**, with permission to push changes and manage PRs.
-- **The GitHub CLI (`gh`) installed and signed in.**
-- **GitHub Codex review and Codex recurring automations available.**
-- **Your project’s build and test tools.**
-
-The loop can commit and push changes, comment on PRs, and schedule follow-ups. Use it when you’re ready for those actions.
-
-It’s a good fit for prototypes and small design changes you can run and verify. For production work, use Code Review in Codex to inspect the changes yourself or with a developer. Know what you’re shipping before merging.
-
-[Setup and usage guide →](https://github.com/vicc/skills/tree/main/skills/code-review-loop)
-
-[How the loop decides it’s done →](https://github.com/vicc/skills/tree/main/skills/code-review-loop#what-counts-as-done)
+[Setup and usage guide](skills/vicc-review-until-clean/README.md)
 
 ## OpenSCAD
 
@@ -144,12 +118,12 @@ Clone or download this repository. Copy the entire folder for each skill you wan
 | Skill | Folder to copy |
 | --- | --- |
 | GLSL to Metal | `skills/vicc-convert-glsl-to-metal` |
-| Code Review Loop | `skills/code-review-loop` |
-| Vicc Skills Audit | `skills/vicc-skills-audit` |
+| Vicc Review Until Clean | `skills/vicc-review-until-clean` |
+| Vicc Audit Skills | `skills/vicc-audit-skills` |
 | OpenSCAD | `skills/vicc-model-with-openscad` |
 
 If a skill is already installed, review your existing copy before replacing it.
 
-Other agents that support `SKILL.md` can use these instructions through their own installation mechanism. Check each skill’s requirements first. Code Review Loop depends on Codex review and recurring automation capabilities.
+Other agents that support `SKILL.md` can use these instructions through their own installation mechanism. Check each skill’s requirements first. The full GitHub review loop requires GitHub Codex review access.
 
 </details>
