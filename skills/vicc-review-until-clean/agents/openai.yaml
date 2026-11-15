@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vicc Review Until Clean"
+  short_description: "Repeat local Codex reviews or run the GitHub PR loop"
+  default_prompt: "Use $vicc-review-until-clean to review my local changes, fix actionable findings, and rerun review and checks until they pass."
