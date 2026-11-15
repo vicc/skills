@@ -19,7 +19,11 @@ from functools import lru_cache
 
 SESSION_ID = re.compile(r"([a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12})\.jsonl(?:\.zst)?$")
 CATALOG_ITEM = re.compile(r"^- (.+?): .*?\(file: (.+?/SKILL\.md)\)\s*$")
-SHELL_PATH = re.compile(r"/?(?:[~\w.*{}$+@()-]+/)+SKILL\.md")
+SHELL_PATH = re.compile(
+    r"""(?P<quote>["'])(?P<quoted>(?:/|~/|\.\.?/|[\w.$~+@()-]+/)"""
+    r"""(?:(?!(?P=quote))[^\\\r\n])*?/SKILL\.md)\\?(?P=quote)"""
+    r"|(?P<bare>/?(?:(?:[~\w.*{}$+@()-]|\\+[ \t])+/)+SKILL\.md)"
+)
 NAME = re.compile(r"(?m)^name:\s*['\"]?([\w.:-]+)")
 READ = re.compile(r"\b(cat|sed|head|tail|bat|awk|less|more|Get-Content|read_file|readFileSync|readFile|open|read_text|read_bytes)\b")
 LOOKUP = re.compile(r"\b(ls|find|rg|grep|stat|test|shasum|cp|mv|rm|mkdir|touch|write_text|writeFile|apply_patch)\b")
@@ -150,6 +154,21 @@ def skill_id(path, home, codex_home):
     return f"project:{path.parent.name}@{hashlib.sha256(str(path.parent).encode()).hexdigest()[:8]}"
 
 
+def skill_roots(args):
+    roots = [args.home / ".agents/skills", args.codex_home / "skills"]
+    if args.workspace:
+        roots.extend([args.workspace / ".agents/skills", args.workspace / ".codex/skills"])
+    return roots
+
+
+def within_roots(path, roots):
+    try:
+        resolved = path.resolve(strict=True)
+    except (OSError, RuntimeError):
+        return False
+    return any(resolved.is_relative_to(root) for root in roots)
+
+
 def inventory(catalog, historical_catalog, args):
     try:
         with (args.codex_home / "config.toml").open("rb") as file:
@@ -158,7 +177,7 @@ def inventory(catalog, historical_catalog, args):
         config = {}
     disabled = {str(path_of(entry["path"], args.home)) for entry in (config.get("skills") or {}).get("config", [])
                 if "path" in entry and entry.get("enabled") is False}
-    active = {value[:3] for _, path in catalog.values() if (value := plugin_path(path))}
+    active = {value[:3] for _, path in catalog.values() if path.is_file() and (value := plugin_path(path))}
     current_plugins = {value[:2] for value in active}
     for _, path in historical_catalog.values():
         if path.is_file() and (value := plugin_path(path)) and value[:2] not in current_plugins:
@@ -175,23 +194,30 @@ def inventory(catalog, historical_catalog, args):
                 version = max(versions, key=lambda path: (path.stat().st_mtime, path.name))
                 active.add((market, plugin, version.name))
     found = {}
+    readable_roots = [*skill_roots(args), cache]
 
     def add(name, path, available):
         key = skill_id(path, args.home, args.codex_home)
-        if key not in found:
-            owner = "plugin" if plugin_path(path) else ("built-in" if key.startswith("built-in:") else "standalone")
-            found[key] = {"id": key, "name": name, "path": str(path), "owner": owner,
-                          "in_catalog": available, "disabled": str(path) in disabled, "on_disk": path.is_file()}
+        on_disk = path.is_file()
+        prior = found.get(key)
+        if prior:
+            available = available or prior["in_catalog"]
+            if prior["on_disk"] or not on_disk:
+                prior["in_catalog"] = available
+                return
+            if prior["in_catalog"]:
+                name = prior["name"]
+        owner = "plugin" if plugin_path(path) else ("built-in" if key.startswith("built-in:") else "standalone")
+        found[key] = {"id": key, "name": name, "path": str(path), "owner": owner,
+                      "in_catalog": available, "disabled": str(path) in disabled, "on_disk": on_disk,
+                      "readable": on_disk and not path.is_symlink() and within_roots(path, readable_roots)}
 
     for name, path in catalog.values():
         add(name, path, True)
     for name, path in historical_catalog.values():
         if path.is_file():
             add(name, path, False)
-    roots = [(args.home / ".agents/skills"), (args.codex_home / "skills"), (args.codex_home / "skills/.system")]
-    if args.workspace:
-        roots.extend([args.workspace / ".agents/skills", args.workspace / ".codex/skills"])
-    for root in roots:
+    for root in [*skill_roots(args), args.codex_home / "skills/.system"]:
         for path in sorted(root.glob("*/SKILL.md")):
             add(path.parent.name, path, False)
     for market, plugin, version in sorted(active):
@@ -300,11 +326,12 @@ def scan(entry):
                         continue
                     paths = {}
                     for match in SHELL_PATH.finditer(arg):
+                        path_text = match["quoted"] or re.sub(r"\\+([ \t])", r"\1", match["bare"])
                         prefix = arg[max(0, match.start() - 400):match.start()]
                         command = re.split(r";|&&|\|\||\n|\\n", prefix)[-1]
                         loop_read = not LOOKUP.search(command) and re.search(r"\bfor\b", prefix) and READ.search(prefix)
-                        if (READ.search(command) or skill_reader or file_reader or loop_read) and (key := resolve(match[0])):
-                            paths[key] = match[0]
+                        if (READ.search(command) or skill_reader or file_reader or loop_read) and (key := resolve(path_text)):
+                            paths[key] = path_text
                     if skill_reader and not paths:
                         for key, row in SCAN_ROWS.items():
                             if re.search(r"(?<![\w-])" + re.escape(row["name"]) + r"(?![\w-])", arg):
@@ -329,7 +356,8 @@ def scan(entry):
                             result):
                         key = next(iter(paths))
                         body = re.split(r"(?:^|\n)(?:Output:|Final output:)\s*\n", result, maxsplit=1)[-1]
-                        if any(line in body for line in instruction_lines(SCAN_ROWS[key]["path"])):
+                        row = SCAN_ROWS[key]
+                        if row["readable"] and any(line in body for line in instruction_lines(row["path"])):
                             evidence.add((key, called_turn, called_at))
                     if not paths or any("*" in value or "$" in value for value in paths.values()):
                         for header in headers:
@@ -380,6 +408,8 @@ def usage(files, rows, args, exclude):
 def duplicate_leads(rows):
     documents = {}
     for key, row in rows.items():
+        if not row["readable"]:
+            continue
         try:
             raw = Path(row["path"]).read_bytes()
         except OSError:
@@ -405,9 +435,12 @@ def duplicate_leads(rows):
 
 
 def scan_references(rows, ids, args):
-    scope = [args.home / ".agents/skills", args.codex_home / "skills", args.codex_home / "AGENTS.md"]
+    settings = args.codex_home / "AGENTS.md"
+    approved = [*skill_roots(args), args.codex_home / "plugins/cache"]
+    scope = [*skill_roots(args), settings]
     if args.workspace:
         scope.append(args.workspace)
+        approved.append(args.workspace)
     candidates = {key: Path(rows[key]["path"]) for key in ids}
     patterns = {key: re.compile(r"(?<![\w-])" + re.escape(path.parent.name) + r"(?![\w-])")
                 for key, path in candidates.items()}
@@ -415,7 +448,7 @@ def scan_references(rows, ids, args):
     examined = 0
     skipped = set()
     installed = {Path(row["path"]) for row in rows.values() if row["on_disk"]}
-    linked_roots = {path.parent for path in installed if path.parent.is_symlink()}
+    linked_roots = {path.parent for path in installed if path.parent.is_symlink() and within_roots(path.parent, approved)}
     files = set(installed)
 
     def record_walk_error(error):
@@ -426,6 +459,9 @@ def scan_references(rows, ids, args):
             files.add(root)
             continue
         if not root.exists() and not root.is_symlink():
+            continue
+        if not within_roots(root, approved):
+            skipped.add(root)
             continue
         for directory, folders, names in os.walk(root, onerror=record_walk_error):
             folders[:] = [name for name in folders if name not in {".git", "node_modules", "build", "dist", "work", "outputs", ".venv"}]
@@ -441,7 +477,8 @@ def scan_references(rows, ids, args):
                     files.add(path)
     for path in sorted(files):
         try:
-            if (path.is_symlink() and path not in installed) or path.stat().st_size > 2_000_000:
+            inside_scope = within_roots(path, approved) or (path == settings and path.resolve() == settings)
+            if path.is_symlink() or not inside_scope or not path.is_file() or path.stat().st_size > 2_000_000:
                 skipped.add(path)
                 continue
             content = path.read_text(errors="replace")
