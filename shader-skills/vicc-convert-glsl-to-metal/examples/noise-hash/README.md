@@ -59,8 +59,8 @@ The integer control also matched at the larger seed. [See that comparison →](l
 After [installing the skill](../../README.md#get-it-set-up), paste this into Codex:
 
 ```text
-Use $glsl-to-metal to explore the noise hashes example:
-https://github.com/vicc/skills/tree/main/shader-skills/glsl-to-metal/examples/noise-hash
+Use $vicc-convert-glsl-to-metal to explore the noise hashes example:
+https://github.com/vicc/skills/tree/main/shader-skills/vicc-convert-glsl-to-metal/examples/noise-hash
 
 Show me the original noise and the optional integer-based
 pattern in my app. Explain any visual differences.

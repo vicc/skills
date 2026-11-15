@@ -1,5 +1,5 @@
 ---
-name: glsl-to-metal
+name: vicc-convert-glsl-to-metal
 description: Convert GLSL fragment shaders and Shadertoy effects into Metal for iOS and macOS, using SwiftUI stitchable shaders where suitable and a Metal renderer when needed. Use for shader ports or explicitly requested reconstructions of web shader effects.
 ---
 
@@ -7,30 +7,29 @@ description: Convert GLSL fragment shaders and Shadertoy effects into Metal for 
 
 Preserve the source effect while making coordinates, inputs, color handling, and integration explicit. Focus on iOS and macOS; verify support separately for other Apple platforms. Prefer a focused implementation over an engine or unrelated app scaffolding.
 
-## Choose the integration
-
-Use the project's platform, deployment target, and architecture. For standalone examples, state a deployment target supported by every API used. Do not silently raise an app's minimum OS version. SwiftUI's core shader APIs start at iOS 17 and macOS 14; older targets need availability handling or another rendering path.
-
-Prefer a SwiftUI `[[ stitchable ]]` shader when the effect fits:
-
-- A `Shader` used as a `ShapeStyle` for procedural fills without source content.
-- `colorEffect` for transformations of the current pixel's color.
-- `distortionEffect` for mapping each destination position to a source sampling position.
-- `layerEffect` for sampling the view's rendered layer, including neighboring pixels.
-
-Before writing a SwiftUI shader, read [SwiftUI contracts and integration](references/swiftui.md) for signatures, resource limits, bundling, and optional precompilation.
-
-Texture use alone does not require a custom pipeline, but SwiftUI currently supports only one `.image` argument per shader instance. Check whether that plus any supplied layer covers the inputs. Use a Metal renderer for persistent feedback, multiple independent texture inputs that exceed SwiftUI's bindings, explicit render/compute passes, or unsupported blending. Do not flatten a multipass effect into a single pass without identifying the visual change.
-
-Before implementation, consult current official Apple documentation for the APIs actually used. Use Apple Doc MCP if available; otherwise use official web documentation or the installed SDK. For non-Apple dependencies, use Context7 if available or official documentation. No particular MCP server is required. Identify unverified API assumptions when documentation is inaccessible.
-
 ## Inspect the source
+
+Open your response or implementation plan with the shader input and pass inventory. Put the renderer recommendation after the inventory, including in short briefs, and omit any opening summary that names a renderer. For each pass, name the inputs it reads, the output it writes, and any dependency on another pass or a previous frame. For a single-pass effect, list that pass and its inputs. Use this inventory to explain the renderer choice.
 
 Identify plain GLSL, Shadertoy `mainImage`, or a requested reconstruction. Inventory uniforms, channel types, textures, sampler settings, time, mouse input, resolution, buffer passes, and feedback dependencies. Account for used Shadertoy values such as `iTimeDelta`, `iFrame`, and `iChannelResolution`, not just `iTime` and `iResolution`.
 
 Map each used input to a concrete Swift/Metal value, texture, or pass. Preserve channel wrapping, filtering, mipmap/LOD behavior, texture orientation, and data-versus-color interpretation where they affect the result. Do not replace required channels with unrelated procedural noise and call the port equivalent.
 
 Inspect linked source when accessible. For incomplete source, infer only the smallest necessary pieces and label them. If only a visible demo is available, call the result a reconstruction; if that is also inaccessible, request source or a visual reference. Preserve attribution and license notices: this skill's license does not relicense third-party shaders or assets.
+
+## Choose the integration
+
+Use the project's platform, deployment target, and architecture. For standalone examples, state a deployment target supported by every API used. Do not silently raise an app's minimum OS version. SwiftUI's core shader APIs start at iOS 17 and macOS 14; older targets need availability handling or another rendering path.
+
+Choose the rendering path from the source inventory, the host view, and the deployment target:
+
+1. Check whether SwiftUI can express every required pass and bind every resource. SwiftUI supports one `.image` argument per shader instance plus the rendered view layer for a layer effect. Use a Metal renderer for persistent feedback, independent textures beyond those bindings, explicit render/compute passes, or unsupported blending. Preserve pass order and feedback because later passes can depend on intermediate or previous-frame values.
+2. If SwiftUI can express the effect and the target supports the required APIs, use a `[[ stitchable ]]` shader. Choose `Shader` as a `ShapeStyle` for a procedural fill, `colorEffect` for the current pixel's color, `distortionEffect` for a destination-to-source position mapping, or `layerEffect` for reading the rendered layer, including neighboring pixels.
+3. If a supported OS lacks the SwiftUI API, guard the SwiftUI path and use a compatible renderer when the effect must work on that OS. Use an existing fallback only if it satisfies the requested behavior.
+
+Before writing a SwiftUI shader, read [SwiftUI contracts and integration](references/swiftui.md) for signatures, resource limits, bundling, and optional precompilation.
+
+Before implementation, consult current official Apple documentation for the APIs actually used. Use Apple Doc MCP if available; otherwise use official web documentation or the installed SDK. For non-Apple dependencies, use Context7 if available or official documentation. No particular MCP server is required. Identify unverified API assumptions when documentation is inaccessible.
 
 ## Convert deliberately
 
@@ -68,7 +67,7 @@ For layer/distortion effects, derive `maxSampleOffset` per axis in user-space un
 
 ## When a Metal renderer is needed
 
-Use `MTKView` when appropriate. For SwiftUI integration, use `UIViewRepresentable` on iOS and `NSViewRepresentable` on native macOS; Mac Catalyst follows UIKit. Share rendering code and isolate platform-specific view/input adapters. Only produce the platforms requested.
+Reuse the host's existing Metal surface when it can supply the required passes and resources. Use `MTKView` for a new onscreen Metal surface. For SwiftUI integration, use `UIViewRepresentable` on iOS and `NSViewRepresentable` on native macOS; Mac Catalyst follows UIKit. Share rendering code and isolate platform-specific view/input adapters. Only produce the platforms requested.
 
 - Retain the renderer/delegate, update parameters without recreating pipelines every frame, and release or stop rendering work when the view is dismantled. Respect UI actor isolation and the actual delegate callback model.
 - Use `drawableSize` in pixels for viewport uniforms. Handle resize and backing-scale changes, unavailable drawables/devices, and zero-sized views. On macOS, test resizing and movement between displays.
@@ -80,7 +79,7 @@ Use `MTKView` when appropriate. For SwiftUI integration, use `UIViewRepresentabl
 
 Provide a brief integration summary, a complete `.metal` file, Swift integration with a minimal view, and concise notes on preserved behavior, differences, limitations, and tunable parameters. Include necessary imports, target membership or bundle selection, and availability handling. Do not present undefined helpers or placeholder resources as a complete implementation.
 
-Check input coverage, coordinate units, aspect ratio, time, sampling bounds, alpha, and Swift/Metal signatures. When the toolchain is available, compile for the requested platforms and stated targets, recording the result; otherwise explicitly report a static review. Dynamic shader lookup means a successful Swift build alone does not prove the Metal function name or argument bindings are valid at runtime.
+Check input coverage, coordinate units, aspect ratio, time, sampling bounds, alpha, and Swift/Metal signatures. When the toolchain is available, compile for the requested platforms and stated targets, recording the result; otherwise explicitly report a static review. When a target runtime is available, invoke the actual shader through its integration with the configured function name, argument types and order, and resource bindings. Check that it loads and renders a frame, since a successful build can miss dynamic lookup and binding failures. If the runtime is unavailable, record the binding check as unverified.
 
 When source rendering is available, compare at matching inputs/time, different aspect ratios, and transparency where applicable. Validate any macOS claim on macOS and any iOS claim on iOS. Distinguish compilation, shader loading/binding, visual comparison, and device performance; claim only checks actually performed.
 
