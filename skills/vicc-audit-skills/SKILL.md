@@ -1,5 +1,5 @@
 ---
-name: vicc-skills-audit
+name: vicc-audit-skills
 description: Audit installed Codex skills, fresh-chat context cost, recorded usage, and removal candidates. Use for skill inventory, startup token overhead, top skills, or skill cleanup.
 ---
 
