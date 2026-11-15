@@ -2,7 +2,7 @@
 
 **Bring the idea. Let your agent cook.**
 
-Skills are reusable instructions that help an AI coding assistant tackle specific tasks. This collection helps you bring visual effects into Apple apps, work through code reviews, audit your installed Codex skills, and model parts for 3D printing.
+Skills are reusable instructions that help an AI coding assistant tackle specific tasks. This collection helps you build features, bring visual effects into Apple apps, work through code reviews, audit your installed Codex skills, and model parts for 3D printing.
 
 You describe what you want. The skill gives your agent a workflow to follow.
 
@@ -10,12 +10,33 @@ You describe what you want. The skill gives your agent a workflow to follow.
 
 | Skill | What it helps you do |
 | --- | --- |
+| [Vicc Cook](skills/vicc-cook/SKILL.md) | Build and verify a real end-to-end flow, with approval before taking a fallback. |
 | [GLSL to Metal](https://github.com/vicc/skills/tree/main/skills/vicc-convert-glsl-to-metal) | Bring animated backgrounds, ripples, and other shader effects into iPhone and Mac apps. |
 | [Vicc Review Until Clean](https://github.com/vicc/skills/tree/main/skills/vicc-review-until-clean) | Review and fix local changes until they pass, or run the full GitHub PR loop. |
 | [Vicc Audit Skills](skills/vicc-audit-skills/SKILL.md) | See which Codex skills you use, what they cost at chat startup, and what you could remove. |
 | [OpenSCAD](skills/vicc-model-with-openscad/SKILL.md) | Model printable parts and connectors, preview them from several angles, and export STL files. |
 
 Install the skills you need. Once Codex confirms installation, open your project and try a starter prompt below.
+
+## Vicc Cook
+
+Use Vicc Cook to implement a feature, fix, or prototype and verify it through the real workflow. If something blocks the requested behavior and a backup would change the result, Cook asks before using it.
+
+Install it in Codex:
+
+```text
+Install the vicc-cook skill from:
+https://github.com/vicc/skills/tree/main/skills/vicc-cook
+```
+
+Start it explicitly:
+
+```text
+Use $vicc-cook to add a saved filter to the activity page.
+Verify that my filter is still selected after a reload.
+```
+
+Cook runs only when explicitly invoked.
 
 ## GLSL to Metal
 
@@ -117,6 +138,7 @@ Clone or download this repository. Copy the entire folder for each skill you wan
 
 | Skill | Folder to copy |
 | --- | --- |
+| Vicc Cook | `skills/vicc-cook` |
 | GLSL to Metal | `skills/vicc-convert-glsl-to-metal` |
 | Vicc Review Until Clean | `skills/vicc-review-until-clean` |
 | Vicc Audit Skills | `skills/vicc-audit-skills` |
