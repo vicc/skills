@@ -1,0 +1,4 @@
+interface:
+  display_name: "Model with OpenSCAD"
+  short_description: "Model, preview, and export parts and printable connectors"
+  default_prompt: "Use $vicc-model-with-openscad to create or edit a parametric 3D-printable part. For a connector, specify fit and print a test coupon before committing to the full part."
