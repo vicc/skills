@@ -2,7 +2,7 @@
 
 **Bring the idea. Let your agent cook.**
 
-Skills are reusable instructions that help an AI coding assistant tackle specific tasks. This collection helps you bring visual effects into Apple apps and work through code reviews with Codex.
+Skills are reusable instructions that help an AI coding assistant tackle specific tasks. This collection helps you bring visual effects into Apple apps, work through code reviews, and audit your installed Codex skills.
 
 You describe what you want. The skill gives your agent a workflow to follow.
 
@@ -10,10 +10,11 @@ You describe what you want. The skill gives your agent a workflow to follow.
 
 | Skill | What it helps you do |
 | --- | --- |
-| [GLSL to Metal](https://github.com/vicc/skills/tree/main/shader-skills/vicc-convert-glsl-to-metal) | Bring animated backgrounds, ripples, and other shader effects into iPhone and Mac apps. |
-| [Code Review Loop](https://github.com/vicc/skills/tree/main/workflow-skills/code-review-loop) | Get code reviewed, work through fixes, and check the results before merging. |
+| [GLSL to Metal](https://github.com/vicc/skills/tree/main/skills/vicc-convert-glsl-to-metal) | Bring animated backgrounds, ripples, and other shader effects into iPhone and Mac apps. |
+| [Code Review Loop](https://github.com/vicc/skills/tree/main/skills/code-review-loop) | Get code reviewed, work through fixes, and check the results before merging. |
+| [Vicc Skills Audit](skills/vicc-skills-audit/SKILL.md) | See which Codex skills you use, what they cost at chat startup, and what you could remove. |
 
-Install either skill, or both. Once Codex confirms installation, open your project and try its starter prompt below.
+Install the skills you need. Once Codex confirms installation, open your project and try a starter prompt below.
 
 ## GLSL to Metal
 
@@ -29,7 +30,7 @@ Open Codex and paste:
 
 ```text
 Install the vicc-convert-glsl-to-metal skill from:
-https://github.com/vicc/skills/tree/main/shader-skills/vicc-convert-glsl-to-metal
+https://github.com/vicc/skills/tree/main/skills/vicc-convert-glsl-to-metal
 ```
 
 ### Try it
@@ -55,9 +56,9 @@ Building for Mac? Say that instead. Keep directing it with requests like “make
 
 The examples target iOS 17+ and macOS 14+. They’ve been compiled for both and rendered on macOS 26.7.1. iOS execution and execution on the minimum OS versions remain untested.
 
-[Setup and usage guide →](https://github.com/vicc/skills/tree/main/shader-skills/vicc-convert-glsl-to-metal)
+[Setup and usage guide →](https://github.com/vicc/skills/tree/main/skills/vicc-convert-glsl-to-metal)
 
-[Side-by-side comparisons and testing details →](https://github.com/vicc/skills/tree/main/shader-skills/vicc-convert-glsl-to-metal/examples)
+[Side-by-side comparisons and testing details →](https://github.com/vicc/skills/tree/main/skills/vicc-convert-glsl-to-metal/examples)
 
 ## Code Review Loop
 
@@ -73,7 +74,7 @@ Open Codex and paste:
 
 ```text
 Install the code-review-loop skill from:
-https://github.com/vicc/skills/tree/main/workflow-skills/code-review-loop
+https://github.com/vicc/skills/tree/main/skills/code-review-loop
 ```
 
 ### Try it
@@ -103,9 +104,9 @@ The loop can commit and push changes, comment on PRs, and schedule follow-ups. U
 
 It’s a good fit for prototypes and small design changes you can run and verify. For production work, use Code Review in Codex to inspect the changes yourself or with a developer. Know what you’re shipping before merging.
 
-[Setup and usage guide →](https://github.com/vicc/skills/tree/main/workflow-skills/code-review-loop)
+[Setup and usage guide →](https://github.com/vicc/skills/tree/main/skills/code-review-loop)
 
-[How the loop decides it’s done →](https://github.com/vicc/skills/tree/main/workflow-skills/code-review-loop#what-counts-as-done)
+[How the loop decides it’s done →](https://github.com/vicc/skills/tree/main/skills/code-review-loop#what-counts-as-done)
 
 ## Contributing and license
 
@@ -120,8 +121,9 @@ Clone or download this repository. Copy the entire folder for each skill you wan
 
 | Skill | Folder to copy |
 | --- | --- |
-| GLSL to Metal | `shader-skills/vicc-convert-glsl-to-metal` |
-| Code Review Loop | `workflow-skills/code-review-loop` |
+| GLSL to Metal | `skills/vicc-convert-glsl-to-metal` |
+| Code Review Loop | `skills/code-review-loop` |
+| Vicc Skills Audit | `skills/vicc-skills-audit` |
 
 If a skill is already installed, review your existing copy before replacing it.
 

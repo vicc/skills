@@ -28,7 +28,7 @@ After [installing the skill](../../README.md#get-it-set-up), paste this into Cod
 
 ```text
 Use $vicc-convert-glsl-to-metal to add the negative modulo example to my app:
-https://github.com/vicc/skills/tree/main/shader-skills/vicc-convert-glsl-to-metal/examples/negative-modulo
+https://github.com/vicc/skills/tree/main/skills/vicc-convert-glsl-to-metal/examples/negative-modulo
 
 Keep the repeating pattern intact on both sides of the center.
 Help me change the colors and dot size, and explain where
