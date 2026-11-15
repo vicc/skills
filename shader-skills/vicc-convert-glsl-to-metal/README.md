@@ -11,8 +11,8 @@ GLSL is a language used to write shaders. Metal is Apple’s graphics technology
 In Codex, paste:
 
 ```text
-Install the glsl-to-metal skill from:
-https://github.com/vicc/skills/tree/main/shader-skills/glsl-to-metal
+Install the vicc-convert-glsl-to-metal skill from:
+https://github.com/vicc/skills/tree/main/shader-skills/vicc-convert-glsl-to-metal
 ```
 
 Once installation is confirmed, you can use it in your next message. Already installed it from the main README? You’re good.
@@ -32,7 +32,7 @@ If the effect uses images or textures, include those too. Source code gives the 
 ## Try this prompt
 
 ```text
-Use $glsl-to-metal to bring this effect into my SwiftUI app.
+Use $vicc-convert-glsl-to-metal to bring this effect into my SwiftUI app.
 
 I’m designing for iPhone and Mac. Keep the colors and motion
 close to the reference, and make the colors and speed adjustable.

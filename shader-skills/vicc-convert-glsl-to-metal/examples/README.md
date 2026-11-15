@@ -73,7 +73,7 @@ The default noise captures matched on this Mac. A larger-seed check changed many
 [Install the skill](../README.md#get-it-set-up), then paste this into Codex:
 
 ```text
-Use $glsl-to-metal to adapt the aurora ribbons example from:
+Use $vicc-convert-glsl-to-metal to adapt the aurora ribbons example from:
 https://github.com/vicc/skills
 
 I’m designing for iPhone and Mac. Help me add it to my app,
@@ -193,8 +193,8 @@ The original three effects also had an earlier 400 × 640 check at time 3.75 sec
 On a Mac with a Metal GPU, a working OpenGL context, a full Xcode installation with the Metal toolchain, and Python 3, run from the repository root:
 
 ```sh
-bash shader-skills/glsl-to-metal/examples/tools/render.sh
-bash shader-skills/glsl-to-metal/examples/tools/validate.sh
+bash shader-skills/vicc-convert-glsl-to-metal/examples/tools/render.sh
+bash shader-skills/vicc-convert-glsl-to-metal/examples/tools/validate.sh
 ```
 
 `render.sh` regenerates the original texture fixtures, builds the capture tools, compiles and executes both shader versions and the math variants, and writes the PNGs, metrics, and capture manifest. It also checks that the correct modulo and both integer-control captures stay within 1/255 RGB for the recorded inputs, and that the intentionally incorrect modulo produces a visible mismatch. Sine-hash differences are reported without requiring precise math to improve them. It overwrites those generated example assets. `validate.sh` separately compiles app-facing Swift and production Metal for iOS 17/macOS 14, then checks SwiftUI shader bindings on the current Mac when macOS 15+ precompilation is available. The scripts do not install or launch an app. Build products remain in ignored `.build/`.

@@ -13,8 +13,8 @@ The included grid makes the movement easy to see. Its colored corner markers als
 After [installing the skill](../../README.md#get-it-set-up), paste this into Codex:
 
 ```text
-Use $glsl-to-metal to add the ripple distortion example to my app:
-https://github.com/vicc/skills/tree/main/shader-skills/glsl-to-metal/examples/ripple-distortion
+Use $vicc-convert-glsl-to-metal to add the ripple distortion example to my app:
+https://github.com/vicc/skills/tree/main/shader-skills/vicc-convert-glsl-to-metal/examples/ripple-distortion
 
 Start with the included grid image so I can check the effect.
 Then help me replace it with my own artwork.
