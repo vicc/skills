@@ -1,5 +1,5 @@
 coming soon.
 
 ```bash
-npx skills add vicc/skills
+npx skills@latest add vicc/skills --agent codex
 ```
