@@ -85,8 +85,8 @@ module lid() {
 box_body();
 
 if (include_lid) {
-    // Position lid next to box for printing
-    translate([width + 10, 0, lid_height - wall_thickness])
+    // The flipped cap's outer face is at -wall_thickness.
+    translate([width + 10, 0, wall_thickness])
         rotate([180, 0, 0])
         lid();
 }

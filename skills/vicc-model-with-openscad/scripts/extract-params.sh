@@ -35,16 +35,36 @@ import sys
 filename = sys.argv[1]
 json_output = sys.argv[2] == "true"
 params = []
-in_block = 0
+block_depth = 0
+quoted = r'"(?:\\.|[^"\\])*"'
+comment_or_string = re.compile(
+    rf'(?P<block_comment>/\*.*?(?:\*/|\Z))|//[^\n]*|{quoted}',
+    re.DOTALL,
+)
+assignment = re.compile(
+    rf'^\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*((?:{quoted}|[^";])+);\s*(?://\s*(.*))?'
+)
+
+
+def blank_token(match):
+    return re.sub(r"[^\n]", " ", match.group())
 
 with open(filename, "r", encoding="utf-8") as file:
-    for line in file:
-        # Track block depth so only top-level customizer variables are listed.
-        in_block += line.count("{") - line.count("}")
-        if in_block > 0:
+    source = file.read()
+    # Mask multiline comments in the source while preserving line comments for
+    # Customizer metadata. In the structure, mask strings and all comments.
+    source = comment_or_string.sub(
+        lambda match: blank_token(match) if match.lastgroup == "block_comment" else match.group(),
+        source,
+    )
+    structure = comment_or_string.sub(blank_token, source)
+    for line, structural_line in zip(source.split("\n"), structure.split("\n")):
+        at_top_level = block_depth == 0
+        block_depth += structural_line.count("{") - structural_line.count("}")
+        if not at_top_level or not structural_line.strip():
             continue
 
-        match = re.match(r"^\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*([^;]+);\s*(?://\s*(.*))?", line)
+        match = assignment.match(line)
         if not match:
             continue
 

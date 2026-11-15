@@ -19,31 +19,31 @@ cable_hole = true;       // Add cable pass-through hole
 cable_diameter = 15;     // [8:25] Cable hole diameter
 add_feet = true;         // Add anti-slip feet
 
-// === Quality ===
+// === Internal ===
 $fn = 48;
+cradle_depth = max(slot_depth, device_thickness / sin(stand_angle));
+support_x = material_thickness + cradle_depth;
+support_z = material_thickness * 0.75;
+lip_height = material_thickness + cradle_depth / tan(stand_angle);
 
-module stand_profile() {
-    // 2D profile of the stand side
-    polygon([
-        [0, 0],                                          // Front bottom
-        [stand_depth, 0],                                // Back bottom
-        [stand_depth, material_thickness],               // Back bottom inner
-        [stand_depth - material_thickness, material_thickness], // Base top back
-        [slot_depth + material_thickness, material_thickness],  // Base top front (behind slot)
-        [slot_depth + material_thickness, slot_depth * tan(90 - stand_angle) + material_thickness], // Slot back
-        [material_thickness, slot_depth * tan(90 - stand_angle) + material_thickness + device_thickness / sin(stand_angle)], // Slot front top
-        [0, slot_depth * tan(90 - stand_angle) + material_thickness], // Front face bottom of slot
-        [0, 0]                                           // Close
-    ]);
+module side_brace() {
+    brace_length = min(stand_height / 2, (stand_depth - support_x) / cos(stand_angle));
+    rotate([90, 0, 0])
+        linear_extrude(height=material_thickness)
+            polygon([
+                [support_x, support_z],
+                [stand_depth, support_z],
+                [support_x + brace_length * cos(stand_angle),
+                 support_z + brace_length * sin(stand_angle)]
+            ]);
 }
 
 module back_support() {
-    // Back angled support
-    translate([stand_depth - material_thickness, 0, material_thickness]) {
-        rotate([0, -90 + stand_angle, 0]) {
-            cube([stand_height, device_width, material_thickness]);
-        }
-    }
+    // The support rises from just behind the cradle and overlaps the base.
+    translate([support_x, 0, support_z])
+        rotate([0, -stand_angle, 0])
+            translate([0, 0, -material_thickness])
+                cube([stand_height, device_width, material_thickness]);
 }
 
 module cable_cutout() {
@@ -58,22 +58,17 @@ module foot() {
 }
 
 module stand() {
+    assert(stand_depth > support_x, "Stand depth must leave room for the cradle and support.");
     difference() {
         union() {
-            // Left side
-            linear_extrude(material_thickness)
-                stand_profile();
-
-            // Right side
-            translate([0, device_width - material_thickness, 0])
-                linear_extrude(material_thickness)
-                stand_profile();
+            for (y = [material_thickness, device_width])
+                translate([0, y, 0]) side_brace();
 
             // Base plate
             cube([stand_depth, device_width, material_thickness]);
 
             // Front lip
-            cube([material_thickness, device_width, slot_depth * tan(90 - stand_angle) + material_thickness]);
+            cube([material_thickness, device_width, lip_height]);
 
             // Back support
             back_support();

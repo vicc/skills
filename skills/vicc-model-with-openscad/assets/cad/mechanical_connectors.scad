@@ -115,26 +115,35 @@ module bayonet_mount(
     stop_height=1.2,
     clearance=0.30
 ) {
+    outer_radius = inner_radius + wall;
+    lug_start = outer_radius - 0.2;
+    stop_overlap = min(lug_width / 4, 0.4);
+    detent_overlap = min(lug_height / 2, detent_height / 2);
     difference() {
-        cylinder(h=height, r=inner_radius + wall);
+        cylinder(h=height, r=outer_radius);
         translate([0, 0, -0.1])
             cylinder(h=height + 0.2, r=inner_radius);
     }
 
     for (i = [0:lug_count - 1]) {
         rotate([0, 0, i * 360 / lug_count]) {
-            translate([inner_radius + wall - 0.2, -lug_width / 2, height - lug_height])
+            translate([lug_start, -lug_width / 2, height - lug_height])
                 rounded_box([lug_depth, lug_width, lug_height], r=0.22);
-            translate([inner_radius + wall + lug_depth - 0.55, lug_width / 2 + clearance, height - lug_height])
-                rounded_box([0.8, stop_height, lug_height], r=0.18);
-            translate([inner_radius + wall + lug_depth / 2, 0, height + detent_height / 2])
-                rotate([0, 90, 0])
-                    cylinder(h=lug_depth * 0.9, r=detent_height / 2, center=true);
+            // Extend both features into the lug while preserving their exposed reach.
+            if (stop_height > 0)
+                translate([lug_start + lug_depth - min(lug_depth / 2, 0.35),
+                           lug_width / 2 - stop_overlap, height - lug_height])
+                    rounded_box([0.8, stop_height + clearance + stop_overlap, lug_height], r=0.18);
+            if (detent_height > 0)
+                translate([outer_radius + lug_depth / 2, 0, height + (detent_height - detent_overlap) / 2])
+                    rotate([0, 90, 0])
+                        cylinder(h=lug_depth * 0.9, r=(detent_height + detent_overlap) / 2, center=true);
         }
     }
 }
 
-// Dovetail rail or socket. Use side clearance from process heuristics.
+// Dovetail rail or socket. base_width is the wide head, top_width the mounting
+// neck. The rail flips over to enter the upward-facing socket from an end.
 module dovetail_joint(
     length=50,
     base_width=12,
@@ -145,28 +154,44 @@ module dovetail_joint(
     male=true,
     end_stop=true
 ) {
-    male_points = [[-base_width / 2, 0], [base_width / 2, 0], [top_width / 2, height], [-top_width / 2, height]];
-    socket_points = [
-        [-(base_width + 2 * clearance) / 2, 0],
-        [ (base_width + 2 * clearance) / 2, 0],
-        [ (top_width + 2 * clearance) / 2, height + clearance],
-        [-(top_width + 2 * clearance) / 2, height + clearance]
-    ];
+    half_head = base_width / 2;
+    half_neck = top_width / 2;
+    socket_head = half_head + clearance;
+    socket_neck = half_neck + clearance;
+    margin = 0.05;
+    mouth_z = wall + height + clearance;
 
     if (male) {
-        prism_x(points=male_points, length=length, center=true);
+        overlap = end_stop ? margin : 0;
+        translate([overlap / 2, 0, 0])
+            prism_x(
+                points=[[-half_neck, 0], [half_neck, 0], [half_head, height], [-half_head, height]],
+                length=length + overlap,
+                center=true
+            );
         if (end_stop) {
-            translate([length / 2 - 0.6, -base_width / 2, 0])
-                rounded_box([1.2, base_width, height], r=0.18);
+            // The shoulder sits outside the channel and limits insertion.
+            translate([length / 2, -socket_head - margin, 0])
+                cube([1.2, 2 * (socket_head + margin), height]);
         }
     } else {
-        outer_width = base_width + 2 * wall + 2 * clearance;
-        outer_height = height + wall + clearance;
+        outer_width = 2 * (socket_head + wall);
         difference() {
             translate([-length / 2, -outer_width / 2, 0])
-                rounded_box([length, outer_width, outer_height], r=0.35);
-            translate([0, 0, wall])
-                prism_x(points=socket_points, length=length + 0.4, center=true);
+                rounded_box([length, outer_width, mouth_z], r=0.35);
+            // Mirror the rail about the opening and add lateral clearance at
+            // both flank endpoints. Keep floor clearance below the wide head.
+            translate([0, 0, mouth_z])
+                prism_x(
+                    points=[
+                        [-socket_head, -height - clearance], [socket_head, -height - clearance],
+                        [socket_head, -height], [socket_neck, 0],
+                        [socket_neck, margin], [-socket_neck, margin],
+                        [-socket_neck, 0], [-socket_head, -height]
+                    ],
+                    length=length + 2 * margin,
+                    center=true
+                );
         }
     }
 }
@@ -281,24 +306,29 @@ module hinge_knuckle(
     side="a"
 ) {
     segment = (length - gap * (knuckle_count - 1)) / knuckle_count;
-    for (i = [0:knuckle_count - 1]) {
-        use_segment =
-            side == "all" ||
-            (side == "a" && i % 2 == 0) ||
-            (side == "b" && i % 2 == 1);
-        if (use_segment) {
-            translate([-length / 2 + segment / 2 + i * (segment + gap), 0, barrel_od / 2])
-                difference() {
-                    rotate([0, 90, 0])
-                        cylinder(h=segment, r=barrel_od / 2, center=true);
-                    rotate([0, 90, 0])
-                        cylinder(h=segment + 0.4, r=(pin_diameter + clearance) / 2, center=true);
+    difference() {
+        union() {
+            for (i = [0:knuckle_count - 1]) {
+                use_segment =
+                    side == "all" ||
+                    (side == "a" && i % 2 == 0) ||
+                    (side == "b" && i % 2 == 1);
+                if (use_segment) {
+                    translate([-length / 2 + segment / 2 + i * (segment + gap), 0, barrel_od / 2])
+                        rotate([0, 90, 0])
+                            cylinder(h=segment, r=barrel_od / 2, center=true);
                 }
-        }
-    }
+            }
 
-    translate([-length / 2, -leaf_width, 0])
-        rounded_box([length, leaf_width, leaf_thickness], r=0.35);
+            translate([-length / 2, -leaf_width, 0])
+                rounded_box([length, leaf_width, leaf_thickness], r=0.35);
+        }
+
+        // Clear the pin through the leaf as well as all the knuckles.
+        translate([0, 0, barrel_od / 2])
+            rotate([0, 90, 0])
+                cylinder(h=length + 0.4, r=(pin_diameter + clearance) / 2, center=true);
+    }
 }
 
 // Clevis-style captive pin joint with optional printed pin.
@@ -345,9 +375,9 @@ module battery_door_example() {
     // Sliding door: dovetail carries shear; snap tab gives final click.
     panel = [54, 32, 2.2];
     rounded_box(panel, r=0.7);
-    translate([panel[0] / 2, panel[1] * 0.30, panel[2]])
+    translate([panel[0] / 2, panel[1] * 0.30, panel[2] - 0.05])
         dovetail_joint(length=42, base_width=8, top_width=5.5, height=3, clearance=0.25, male=true, end_stop=false);
-    translate([panel[0] / 2, panel[1] * 0.70, panel[2]])
+    translate([panel[0] / 2, panel[1] * 0.70, panel[2] - 0.05])
         dovetail_joint(length=42, base_width=8, top_width=5.5, height=3, clearance=0.25, male=true, end_stop=false);
     translate([36, 11, panel[2]])
         snap_tab(beam_length=16, beam_width=5, beam_thickness=1.4, hook_height=0.8, base_length=4, root_radius=0.5);
