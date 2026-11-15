@@ -239,28 +239,33 @@ module magnetic_latch(
     show_mate=false
 ) {
     magnet_radius = (magnet_diameter + pocket_clearance) / 2;
+    join_depth = plate[2] / 20;
+    locating_y = plate[1] * 0.25;
+    pocket_depth_clearance = 0.2;
+    magnet_floor = plate[2] - magnet_thickness - pocket_clearance / 2;
     difference() {
         rounded_box(plate, r=edge_radius);
-        translate([plate[0] * 0.28, plate[1] / 2, plate[2] - magnet_thickness + 0.01])
-            cylinder(h=magnet_thickness + 0.2, r=magnet_radius);
+        translate([plate[0] * 0.28, plate[1] / 2, magnet_floor])
+            cylinder(h=plate[2] - magnet_floor + 0.2, r=magnet_radius);
         translate([plate[0] * 0.28 + magnet_radius, plate[1] / 2, plate[2] - magnet_thickness + 0.25])
             cube([0.8, 0.5, magnet_thickness], center=true); // glue vent notch
     }
-    translate([plate[0] * 0.68, plate[1] / 2, plate[2]])
-        cylinder(h=detent_height, r1=detent_diameter / 2, r2=max(detent_diameter / 2 - 0.25, 0.2));
-    translate([plate[0] * 0.50, plate[1] * 0.25, plate[2]])
-        cylinder(h=alignment_pin_height, r=alignment_pin_diameter / 2);
+    translate([plate[0] * 0.68, plate[1] / 2, plate[2] - join_depth])
+        cylinder(h=detent_height + join_depth, r1=detent_diameter / 2, r2=max(detent_diameter / 2 - 0.25, 0.2));
+    translate([plate[0] * 0.50, locating_y, plate[2] - join_depth])
+        cylinder(h=alignment_pin_height + join_depth, r=alignment_pin_diameter / 2);
 
     if (show_mate) {
         translate([0, plate[1] + 4, 0])
             difference() {
                 rounded_box(plate, r=edge_radius);
-                translate([plate[0] * 0.28, plate[1] / 2, plate[2] - magnet_thickness + 0.01])
-                    cylinder(h=magnet_thickness + 0.2, r=magnet_radius);
-                translate([plate[0] * 0.68, plate[1] / 2, plate[2] - detent_height])
-                    cylinder(h=detent_height + 0.3, r=detent_diameter / 2 + 0.20);
-                translate([plate[0] * 0.50, plate[1] * 0.25, plate[2] - alignment_pin_height])
-                    cylinder(h=alignment_pin_height + 0.3, r=alignment_pin_diameter / 2 + 0.20);
+                translate([plate[0] * 0.28, plate[1] / 2, magnet_floor])
+                    cylinder(h=plate[2] - magnet_floor + 0.2, r=magnet_radius);
+                translate([plate[0] * 0.68, plate[1] / 2, plate[2] - detent_height - pocket_depth_clearance])
+                    cylinder(h=detent_height + pocket_depth_clearance + 0.2, r=detent_diameter / 2 + 0.20);
+                // Flipping the printed mate face-to-face reverses its Y axis.
+                translate([plate[0] * 0.50, plate[1] - locating_y, plate[2] - alignment_pin_height - pocket_depth_clearance])
+                    cylinder(h=alignment_pin_height + pocket_depth_clearance + 0.2, r=alignment_pin_diameter / 2 + 0.20);
             }
     }
 }
@@ -294,6 +299,8 @@ module flexure_clip(
 }
 
 // Alternating hinge knuckles. Use side="a", "b", or "all".
+// Rotate a printed side B 180 degrees around the pin axis to assemble.
+// For coplanar mounting faces, apply mirror([0, 1, 0]) to side B before printing.
 module hinge_knuckle(
     length=36,
     knuckle_count=5,
@@ -306,23 +313,32 @@ module hinge_knuckle(
     side="a"
 ) {
     segment = (length - gap * (knuckle_count - 1)) / knuckle_count;
+
+    function owns_knuckle(i) =
+        side == "all" ||
+        (side == "a" && i % 2 == 0) ||
+        (side == "b" && i % 2 == 1);
+
+    module barrel(i, diameter, span) {
+        translate([-length / 2 + segment / 2 + i * (segment + gap), 0, barrel_od / 2])
+            rotate([0, 90, 0])
+                cylinder(h=span, d=diameter, center=true);
+    }
+
     difference() {
         union() {
-            for (i = [0:knuckle_count - 1]) {
-                use_segment =
-                    side == "all" ||
-                    (side == "a" && i % 2 == 0) ||
-                    (side == "b" && i % 2 == 1);
-                if (use_segment) {
-                    translate([-length / 2 + segment / 2 + i * (segment + gap), 0, barrel_od / 2])
-                        rotate([0, 90, 0])
-                            cylinder(h=segment, r=barrel_od / 2, center=true);
-                }
-            }
+            for (i = [0:knuckle_count - 1])
+                if (owns_knuckle(i))
+                    barrel(i, barrel_od, segment);
 
             translate([-length / 2, -leaf_width, 0])
                 rounded_box([length, leaf_width, leaf_thickness], r=0.35);
         }
+
+        // Clear the opposing barrels throughout the swing and leave half the axial gap on each end.
+        for (i = [0:knuckle_count - 1])
+            if (!owns_knuckle(i))
+                barrel(i, barrel_od + clearance, segment + gap);
 
         // Clear the pin through the leaf as well as all the knuckles.
         translate([0, 0, barrel_od / 2])

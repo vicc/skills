@@ -17,7 +17,7 @@ slot_depth = 15;         // [10:30] How deep device sits in slot
 // === Features ===
 cable_hole = true;       // Add cable pass-through hole
 cable_diameter = 15;     // [8:25] Cable hole diameter
-add_feet = true;         // Add anti-slip feet
+add_feet = true;         // Add feet (use supports under the raised base)
 
 // === Internal ===
 $fn = 48;
@@ -25,6 +25,7 @@ cradle_depth = max(slot_depth, device_thickness / sin(stand_angle));
 support_x = material_thickness + cradle_depth;
 support_z = material_thickness * 0.75;
 lip_height = material_thickness + cradle_depth / tan(stand_angle);
+foot_height = 2;
 
 module side_brace() {
     brace_length = min(stand_height / 2, (stand_depth - support_x) / cos(stand_angle));
@@ -54,10 +55,11 @@ module cable_cutout() {
 }
 
 module foot() {
-    cylinder(h = 2, d1 = 10, d2 = 8);
+    // Overlap the base so the foot and stand export as one solid.
+    cylinder(h = foot_height + 0.1, d1 = 10, d2 = 8);
 }
 
-module stand() {
+module stand_body() {
     assert(stand_depth > support_x, "Stand depth must leave room for the cradle and support.");
     difference() {
         union() {
@@ -77,13 +79,14 @@ module stand() {
         // Cable hole
         cable_cutout();
     }
+}
 
-    // Feet
+module stand() {
+    translate([0, 0, add_feet ? foot_height : 0]) stand_body();
+
     if (add_feet) {
-        translate([10, 10, 0]) foot();
-        translate([10, device_width - 10, 0]) foot();
-        translate([stand_depth - 10, 10, 0]) foot();
-        translate([stand_depth - 10, device_width - 10, 0]) foot();
+        for (x = [10, stand_depth - 10], y = [10, device_width - 10])
+            translate([x, y, 0]) foot();
     }
 }
 
