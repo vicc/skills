@@ -12,7 +12,7 @@ In Codex, paste:
 
 ```text
 Install the vicc-convert-glsl-to-metal skill from:
-https://github.com/vicc/skills/tree/main/shader-skills/vicc-convert-glsl-to-metal
+https://github.com/vicc/skills/tree/main/skills/vicc-convert-glsl-to-metal
 ```
 
 Once installation is confirmed, you can use it in your next message. Already installed it from the main README? You’re good.
