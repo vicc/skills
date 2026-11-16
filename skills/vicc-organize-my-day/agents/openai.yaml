@@ -1,0 +1,6 @@
+interface:
+  display_name: "Vicc Organize My Day"
+  short_description: "Plan your day around priorities and commitments"
+  default_prompt: "Use $vicc-organize-my-day to check my calendar and propose a realistic plan for today."
+policy:
+  allow_implicit_invocation: false
