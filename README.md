@@ -4,11 +4,13 @@ These are the skills I use with Codex to build and review software, make things 
 
 ## Install
 
-Run this from your project to choose which skills to install for Codex.
+Run the installer from your project directory.
 
 ```bash
 npx skills@latest add vicc/skills --agent codex
 ```
+
+To install just one skill, append `--skill` and its name, such as `--skill vicc-share-localhost`.
 
 Once a skill is installed, you can call it by name. For example, with a web app running on your Mac, ask Codex:
 
