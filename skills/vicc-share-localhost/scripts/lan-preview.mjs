@@ -136,7 +136,7 @@ function runProxy(configPath) {
     });
     upstream.on('error', () => {
       if (response.headersSent) response.destroy();
-      else response.writeHead(502).end('The source preview is unavailable.');
+      else response.writeHead(502).end('The source preview is unavailable. Check that the app is running on the Mac at its original address, then reload this page.');
     });
     response.on('close', () => upstream.destroy());
     incoming.pipe(upstream);

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Share Localhost"
+  short_description: "Share a local web app on your network with a QR code"
+  default_prompt: "Use $vicc-share-localhost to share the running preview on my Wi-Fi and show a QR code."

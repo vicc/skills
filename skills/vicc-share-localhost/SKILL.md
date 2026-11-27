@@ -1,9 +1,9 @@
 ---
-name: vicc-lan-preview
-description: Share a localhost HTTP or HTTPS web app from macOS with another device on the same private IPv4 network. Verify the LAN link, show a scannable QR code, and keep the preview running after the turn.
+name: vicc-share-localhost
+description: Share a localhost HTTP or HTTPS web app from macOS with another device on the same Wi-Fi or wired network using private IPv4. Verify the LAN link, show a scannable QR code, and keep the preview running after the turn.
 ---
 
-# LAN Preview
+# Share Localhost
 
 Use this skill for any browser-based app listening on a loopback address on this Mac. The bundled helper uses Node.js 18.3 or later, macOS launchd, and the Swift toolchain. Run the commands below from this skill’s directory.
 
@@ -16,7 +16,7 @@ Use this skill for any browser-based app listening on a loopback address on this
    ```
 
    Choose a writable artifact path for the PNG. The helper selects the Mac's private LAN interface, starts a launchd job, verifies the LAN URL, and generates the PNG. Use `--bind <assigned-private-ip>` when several local interfaces are plausible and `--port <port>` when the user wants a particular LAN port. Run it with the local permissions needed for a listener and a user launchd job.
-4. Show the QR inline with an absolute image path and include the full clickable LAN URL. The helper verifies the address from this Mac. Describe a separate device as tested only if it was actually used.
+4. Show the QR inline with the alt text “Scan to open the shared preview” and an absolute image path and include the full clickable LAN URL. If the helper started a job, include its exact stop command. The helper verifies the address from this Mac. Describe a separate device as tested only if it was actually used.
 
 The launchd job persists after the turn, while the source server still needs to be running. To stop a preview, run `node scripts/lan-preview.mjs stop <job>` with the job name returned by the helper. This leaves the source app running.
 
