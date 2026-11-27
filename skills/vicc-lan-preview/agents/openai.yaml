@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vicc LAN Preview"
+  short_description: "Share a local web app over Wi-Fi with a QR code"
+  default_prompt: "Use $vicc-lan-preview to share the running preview on my Wi-Fi and show a QR code."
